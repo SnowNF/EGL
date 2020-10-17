@@ -152,7 +152,7 @@ struct _egl_display
    } Options;
 
    /* these fields are set by the driver during init */
-   void *DriverData;          /**< Driver private data */
+   void *DriverData;          /**< Driver private data */ //might be loaded at dri2_initialize_x11_swrast()
    EGLint Version;            /**< EGL version major*10+minor */
    EGLint ClientAPIs;         /**< Bitmask of APIs supported (EGL_xxx_BIT) */
    _EGLExtensions Extensions; /**< Extensions supported */
@@ -209,7 +209,7 @@ _eglLookupDisplay(EGLDisplay display)
 {
    _EGLDisplay *dpy = (_EGLDisplay *) display;
    if (!_eglCheckDisplayHandle(display))
-      dpy = NULL;
+      dpy = NULL;//display无效则返回NULL
    return dpy;
 }
 
@@ -220,6 +220,7 @@ _eglLookupDisplay(EGLDisplay display)
 static inline EGLDisplay
 _eglGetDisplayHandle(_EGLDisplay *dpy)
 {
+    //空指针为false，因此空指针为EGL_NO_DISPLAY...((EGLDisplay)0)
    return (EGLDisplay) ((dpy) ? dpy : EGL_NO_DISPLAY);
 }
 

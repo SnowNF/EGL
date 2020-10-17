@@ -46,6 +46,7 @@ _eglGrowArray(_EGLArray *array)
    while (new_size <= array->Size)
       new_size *= 2;
 
+   //re alloc函数：传入旧指针和大小，返回新的指针.
    elems = realloc(array->Elements, new_size * sizeof(array->Elements[0]));
    if (!elems) {
       _eglLog(_EGL_DEBUG, "failed to grow %s array to %d",
@@ -69,12 +70,12 @@ _eglCreateArray(const char *name, EGLint init_size)
    _EGLArray *array;
 
    array = calloc(1, sizeof(*array));
-   if (array) {
+   if (array) {//array不为空执行↓
       array->Name = name;
-      array->MaxSize = (init_size > 0) ? init_size : 1;
+      array->MaxSize = (init_size > 0) ? init_size : 1;//大于0载入指定大小，否则为1
       if (!_eglGrowArray(array)) {
          free(array);
-         array = NULL;
+         array = NULL;//不可增长返回NULL
       }
    }
 
@@ -105,7 +106,7 @@ void
 _eglAppendArray(_EGLArray *array, void *elem)
 {
    if (array->Size >= array->MaxSize && !_eglGrowArray(array))
-      return;
+      return;//当前大小大于最大大小且增长大小失败
 
    array->Elements[array->Size++] = elem;
 }

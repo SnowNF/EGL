@@ -43,6 +43,7 @@
 #include "c11/threads.h"
 
 #include "egllog.h"
+#include "../EGL_config.h"
 
 #define MAXSTRING 1000
 #define FALLBACK_LOG_LEVEL _EGL_WARNING
@@ -144,6 +145,9 @@ _eglInitLogger(void)
 
    if (logging.initialized)
       return;
+#ifdef EGL_BUILD_LOG_LEVEL
+   level = EGL_BUILD_LOG_LEVEL;
+#else
 
    log_env = getenv("EGL_LOG_LEVEL");
    if (log_env) {
@@ -157,6 +161,7 @@ _eglInitLogger(void)
    else {
       level = FALLBACK_LOG_LEVEL;
    }
+#endif
 
    logging.logger = _eglDefaultLogger;
    logging.level = (level >= 0) ? level : FALLBACK_LOG_LEVEL;

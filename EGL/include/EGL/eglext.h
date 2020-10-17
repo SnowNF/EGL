@@ -104,7 +104,7 @@ EGLAPI EGLSyncKHR EGLAPIENTRY eglCreateSync64KHR (EGLDisplay dpy, EGLenum type, 
 typedef void *EGLLabelKHR;
 typedef void *EGLObjectKHR;
 typedef void (EGLAPIENTRY  *EGLDEBUGPROCKHR)(EGLenum error,const char *command,EGLint messageType,EGLLabelKHR threadLabel,EGLLabelKHR objectLabel,const char* message);
-#define EGL_OBJECT_THREAD_KHR             0x33B0
+#define EGL_OBJECT_THREAD_KHR             0x33B0  // 13232
 #define EGL_OBJECT_DISPLAY_KHR            0x33B1
 #define EGL_OBJECT_CONTEXT_KHR            0x33B2
 #define EGL_OBJECT_SURFACE_KHR            0x33B3

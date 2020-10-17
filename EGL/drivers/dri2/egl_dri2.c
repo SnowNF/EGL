@@ -386,8 +386,8 @@ static const struct dri2_extension_match dri2_core_extensions[] = {
 };
 
 static const struct dri2_extension_match swrast_driver_extensions[] = {
-   { __DRI_CORE, 1, offsetof(struct dri2_egl_display, core) },
-   { __DRI_SWRAST, 2, offsetof(struct dri2_egl_display, swrast) },
+   { __DRI_CORE, 1, (int)offsetof(struct dri2_egl_display, core) },//结构体dri2_egl_display的core成员的偏移量
+   { __DRI_SWRAST, 2, (int)offsetof(struct dri2_egl_display, swrast) },
    { NULL, 0, 0 }
 };
 
@@ -408,11 +408,20 @@ static const struct dri2_extension_match optional_core_extensions[] = {
 static EGLBoolean
 dri2_bind_extensions(struct dri2_egl_display *dri2_dpy,
                      const struct dri2_extension_match *matches,
-                     const __DRIextension **extensions,
-                     bool optional)
+                     const __DRIextension **extensions, ////__driDriverGetExtensions_swrast函数的*handle
+                     bool optional) //false
+/*
+ * struct __DRIextensionRec {
+ *   const char *name;
+ *   int version;
+ *  }
+ */
 {
-   int i, j, ret = EGL_TRUE;
+   int i, j;
+   EGLBoolean ret = EGL_TRUE;
    void *field;
+
+   //以下代码执行会初始化: dri2_dpy->swrast
 
    for (i = 0; extensions[i]; i++) {
       _eglLog(_EGL_DEBUG, "found extension `%s'", extensions[i]->name);
@@ -470,7 +479,7 @@ dri2_open_driver(_EGLDisplay *disp)
       if (next == NULL)
          next = end;
 
-      len = next - p;
+      len = (int)(next - p);
 #if GLX_USE_TLS
       snprintf(path, sizeof path,
                "%.*s/tls/%s_dri.so", len, p, dri2_dpy->driver_name);
@@ -505,8 +514,9 @@ dri2_open_driver(_EGLDisplay *disp)
    }
 
    _eglLog(_EGL_DEBUG, "DRI2: dlopen(%s)", path);
-
-   if (asprintf(&get_extensions_name, "%s_%s",
+int asprintf (char **__restrict __ptr,
+             const char *__restrict __fmt, ...);
+   if (asprintf(&get_extensions_name, "%s_%s",   //__driDriverGetExtensions_swrast
                 __DRI_DRIVER_GET_EXTENSIONS, dri2_dpy->driver_name) != -1) {
       get_extensions = dlsym(dri2_dpy->driver, get_extensions_name);
       if (get_extensions) {
@@ -518,7 +528,7 @@ dri2_open_driver(_EGLDisplay *disp)
       free(get_extensions_name);
    }
 
-   if (!extensions)
+   if (!extensions)//不支持扩展执行以下
       extensions = dlsym(dri2_dpy->driver, __DRI_DRIVER_EXTENSIONS);
    if (extensions == NULL) {
       _eglLog(_EGL_WARNING,
@@ -573,15 +583,15 @@ dri2_load_driver_swrast(_EGLDisplay *disp)
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    const __DRIextension **extensions;
 
-   extensions = dri2_open_driver(disp);
+   extensions = dri2_open_driver(disp);//返回__driDriverGetExtensions_swrast函数的*handle
    if (!extensions)
       return EGL_FALSE;
 
    if (!dri2_bind_extensions(dri2_dpy, swrast_driver_extensions, extensions, false)) {
-      dlclose(dri2_dpy->driver);
+      dlclose(dri2_dpy->driver);//正常不会执行...
       return EGL_FALSE;
    }
-   dri2_dpy->driver_extensions = extensions;
+   dri2_dpy->driver_extensions = extensions;//扩展...
 
    return EGL_TRUE;
 }
@@ -696,12 +706,12 @@ EGLBoolean
 dri2_create_screen(_EGLDisplay *disp)
 {
    const __DRIextension **extensions;
-   struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
+   struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);//强转宏..
 
    if (dri2_dpy->image_driver) {
       dri2_dpy->dri_screen =
          dri2_dpy->image_driver->createNewScreen2(0, dri2_dpy->fd,
-                                                  dri2_dpy->loader_extensions,
+      /*第一次不会*/                               dri2_dpy->loader_extensions,
                                                   dri2_dpy->driver_extensions,
                                                   &dri2_dpy->driver_configs,
                                                   disp);
@@ -710,7 +720,7 @@ dri2_create_screen(_EGLDisplay *disp)
          dri2_dpy->dri_screen =
             dri2_dpy->dri2->createNewScreen2(0, dri2_dpy->fd,
                                              dri2_dpy->loader_extensions,
-                                             dri2_dpy->driver_extensions,
+      /* DRI2，不存在的*/                     dri2_dpy->driver_extensions,
                                              &dri2_dpy->driver_configs, disp);
       } else {
          dri2_dpy->dri_screen =
@@ -718,8 +728,8 @@ dri2_create_screen(_EGLDisplay *disp)
                                             dri2_dpy->loader_extensions,
                                             &dri2_dpy->driver_configs, disp);
       }
-   } else {
-      assert(dri2_dpy->swrast);
+   } else {//总是执行
+      assert(dri2_dpy->swrast);//再是空指针就去死
       if (dri2_dpy->swrast->base.version >= 4) {
          dri2_dpy->dri_screen =
             dri2_dpy->swrast->createNewScreen2(0, dri2_dpy->loader_extensions,
@@ -785,14 +795,14 @@ dri2_initialize(_EGLDriver *drv, _EGLDisplay *disp)
     * we would leak context1 as we would be missing the old display connection
     * to free it up correctly.
     */
-   if (dri2_dpy) {
+   if (dri2_dpy) {//如果已载入
       dri2_dpy->ref_count++;
       return EGL_TRUE;
    }
 
    /* not until swrast_dri is supported */
    if (disp->Options.UseFallback)
-      return EGL_FALSE;
+      return EGL_FALSE;//swrast_dri不支持...
 
    /* Nothing to initialize for a test only display */
    if (disp->Options.TestOnly)
@@ -2869,6 +2879,7 @@ no_handle:
 _EGLDriver *
 _eglBuiltInDriverDRI2(const char *args)
 {
+    _eglLog(_EGL_DEBUG,"Init DRI2 driver");
    struct dri2_egl_driver *dri2_drv;
 
    (void) args;

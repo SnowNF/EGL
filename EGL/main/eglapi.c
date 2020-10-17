@@ -101,6 +101,7 @@
 #include "eglconfig.h"
 #include "eglimage.h"
 #include "eglsync.h"
+#include "egllog.h"
 
 
 /**
@@ -116,7 +117,7 @@
       if (err)                                  \
          _eglError(err, __func__);              \
       return ret;                               \
-   } while (0)
+   } while (false)
 
 #define RETURN_EGL_SUCCESS(disp, ret) \
    RETURN_EGL_ERROR(disp, EGL_SUCCESS, ret)
@@ -135,14 +136,14 @@
       drv = _eglCheckDisplay(disp, __func__);      \
       if (!drv)                                    \
          RETURN_EGL_ERROR(disp, 0, ret);           \
-   } while (0)
+   } while (false)
 
 #define _EGL_CHECK_OBJECT(disp, type, obj, ret, drv)      \
    do {                                                   \
       drv = _eglCheck ## type(disp, obj, __func__);       \
       if (!drv)                                           \
          RETURN_EGL_ERROR(disp, 0, ret);                  \
-   } while (0)
+   } while (false)
 
 #define _EGL_CHECK_SURFACE(disp, surf, ret, drv) \
    _EGL_CHECK_OBJECT(disp, Surface, surf, ret, drv)
@@ -160,7 +161,6 @@
 static inline _EGLDriver *
 _eglCheckDisplay(_EGLDisplay *disp, const char *msg)
 {
- //  puts("_eglCheckDisplay");
    if (!disp) {
       _eglError(EGL_BAD_DISPLAY, msg);
       return NULL;
@@ -236,8 +236,8 @@ static inline _EGLDisplay *
 _eglLockDisplay(EGLDisplay display)
 {
    _EGLDisplay *dpy = _eglLookupDisplay(display);
-   if (dpy)
-      mtx_lock(&dpy->Mutex);
+   if (dpy)//如果display无效则dpy为NULL则dpy为false
+      mtx_lock(&dpy->Mutex);//无效不上锁
    return dpy;
 }
 
@@ -338,12 +338,13 @@ _eglConvertAttribsToInt(const EGLAttrib *attr_list)
 
       size += 1; /* add space for EGL_NONE */
 
-      int_attribs = calloc(size, sizeof(int_attribs[0]));
+//      int_attribs = calloc((size_t)size, sizeof(int_attribs[0]));
+       int_attribs = calloc((size_t)size, sizeof(EGLint));
       if (!int_attribs)
          return NULL;
 
       for (i = 0; i < size; i++)
-         int_attribs[i] = attr_list[i];
+         int_attribs[i] = (EGLint)attr_list[i];
    }
    return int_attribs;
 }
@@ -364,10 +365,13 @@ eglGetDisplay(EGLNativeDisplayType nativeDisplay)
 
    STATIC_ASSERT(sizeof(void*) == sizeof(nativeDisplay));
    native_display_ptr = (void*) nativeDisplay;
+   _eglLog(_EGL_DEBUG,"Native display printer is : %p",native_display_ptr);
 
-   plat = _eglGetNativePlatform(native_display_ptr);
-   dpy = _eglFindDisplay(plat, native_display_ptr);
-   return _eglGetDisplayHandle(dpy);
+   plat = _eglGetNativePlatform(native_display_ptr); //return _EGL_PLATFORM_X11
+   dpy = _eglFindDisplay(plat, native_display_ptr);//返回新的or相同的display
+
+   _eglLog(_EGL_DEBUG,"Display Handle is : %p",dpy);
+   return _eglGetDisplayHandle(dpy);//检查handle是否正常
 }
 
 static EGLDisplay
@@ -566,15 +570,15 @@ _eglComputeVersion(_EGLDisplay *disp)
 EGLBoolean EGLAPIENTRY
 eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor)
 {
-   _EGLDisplay *disp = _eglLockDisplay(dpy);
+   _EGLDisplay *disp = _eglLockDisplay(dpy);//dpy无效返回NULL，有效则上锁+返回
 
    _EGL_FUNC_START(disp, EGL_OBJECT_DISPLAY_KHR, NULL, EGL_FALSE);
 
-   if (!disp)
+   if (!disp)//空指针为false.
       RETURN_EGL_ERROR(NULL, EGL_BAD_DISPLAY, EGL_FALSE);
 
-   if (!disp->Initialized) {
-      if (!_eglMatchDriver(disp, EGL_FALSE))
+   if (!disp->Initialized) {///未载入执行以下代码
+      if (!_eglMatchDriver(disp, EGL_FALSE))//通过display匹配驱动
          RETURN_EGL_ERROR(disp, EGL_NOT_INITIALIZED, EGL_FALSE);
 
       /* limit to APIs supported by core */

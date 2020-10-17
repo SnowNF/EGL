@@ -1182,6 +1182,7 @@ static const __DRIextension *swrast_loader_extensions[] = {
 static EGLBoolean
 dri2_initialize_x11_swrast(_EGLDriver *drv, _EGLDisplay *disp)
 {
+    _eglLog(_EGL_INFO, "Using swrast");
    struct dri2_egl_display *dri2_dpy;
 
    dri2_dpy = calloc(1, sizeof *dri2_dpy);
@@ -1189,8 +1190,9 @@ dri2_initialize_x11_swrast(_EGLDriver *drv, _EGLDisplay *disp)
       return _eglError(EGL_BAD_ALLOC, "eglInitialize");
 
    disp->DriverData = (void *) dri2_dpy;
-   if (disp->PlatformDisplay == NULL) {
-      dri2_dpy->conn = xcb_connect(0, &dri2_dpy->screen);
+   if (disp->PlatformDisplay == NULL) {//第一次启动为NULL
+      dri2_dpy->conn = xcb_connect(NULL, &dri2_dpy->screen);
+      _eglLog(_EGL_DEBUG,"Xcb screen is : %d",dri2_dpy->screen);
       dri2_dpy->own_device = true;
    } else {
       Display *dpy = disp->PlatformDisplay;
@@ -1210,7 +1212,7 @@ dri2_initialize_x11_swrast(_EGLDriver *drv, _EGLDisplay *disp)
     */
    dri2_dpy->fd = -1;
    dri2_dpy->driver_name = strdup("swrast");
-   if (!dri2_load_driver_swrast(disp))
+   if (!dri2_load_driver_swrast(disp))//通过disp查找并dlopen驱动并绑定扩展
       goto cleanup_conn;
 
    dri2_dpy->loader_extensions = swrast_loader_extensions;
@@ -1500,7 +1502,7 @@ dri2_initialize_x11(_EGLDriver *drv, _EGLDisplay *disp)
 
    int x11_dri2_accel = (getenv("LIBGL_ALWAYS_SOFTWARE") == NULL);
 
-   if (x11_dri2_accel) {
+   if (x11_dri2_accel) {//设置环境变量LIBGL_ALWAYS_SOFTWARE不会执行
 #ifdef HAVE_DRI3
       if (getenv("LIBGL_DRI3_DISABLE") != NULL ||
           !dri2_initialize_x11_dri3(drv, disp)) {
@@ -1511,7 +1513,7 @@ dri2_initialize_x11(_EGLDriver *drv, _EGLDisplay *disp)
 #ifdef HAVE_DRI3
       }
 #endif
-   } else {
+   } else {//通常加载swrast驱动。。
       initialized = dri2_initialize_x11_swrast(drv, disp);
    }
 

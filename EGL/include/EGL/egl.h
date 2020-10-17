@@ -106,7 +106,7 @@ typedef void (*__eglMustCastToProperFunctionPointerType)(void);
 #define EGL_SAMPLE_BUFFERS                0x3032
 #define EGL_SLOW_CONFIG                   0x3050
 #define EGL_STENCIL_SIZE                  0x3026
-#define EGL_SUCCESS                       0x3000
+#define EGL_SUCCESS                       0x3000  //is 0
 #define EGL_SURFACE_TYPE                  0x3033
 #define EGL_TRANSPARENT_BLUE_VALUE        0x3035
 #define EGL_TRANSPARENT_GREEN_VALUE       0x3036
@@ -130,10 +130,10 @@ EGLAPI EGLBoolean EGLAPIENTRY eglGetConfigAttrib (EGLDisplay dpy, EGLConfig conf
 EGLAPI EGLBoolean EGLAPIENTRY eglGetConfigs (EGLDisplay dpy, EGLConfig *configs, EGLint config_size, EGLint *num_config);
 EGLAPI EGLDisplay EGLAPIENTRY eglGetCurrentDisplay (void);
 EGLAPI EGLSurface EGLAPIENTRY eglGetCurrentSurface (EGLint readdraw);
-EGLAPI EGLDisplay EGLAPIENTRY eglGetDisplay (EGLNativeDisplayType display_id);
+EGLAPI EGLDisplay EGLAPIENTRY eglGetDisplay (EGLNativeDisplayType display_id);  //This is typically the first EGL function that an application calls.
 EGLAPI EGLint EGLAPIENTRY eglGetError (void);
 EGLAPI __eglMustCastToProperFunctionPointerType EGLAPIENTRY eglGetProcAddress (const char *procname);
-EGLAPI EGLBoolean EGLAPIENTRY eglInitialize (EGLDisplay dpy, EGLint *major, EGLint *minor);
+EGLAPI EGLBoolean EGLAPIENTRY eglInitialize (EGLDisplay dpy, EGLint *major, EGLint *minor);//This is typically the second EGL function that an application calls.
 EGLAPI EGLBoolean EGLAPIENTRY eglMakeCurrent (EGLDisplay dpy, EGLSurface draw, EGLSurface read, EGLContext ctx);
 EGLAPI EGLBoolean EGLAPIENTRY eglQueryContext (EGLDisplay dpy, EGLContext ctx, EGLint attribute, EGLint *value);
 EGLAPI const char *EGLAPIENTRY eglQueryString (EGLDisplay dpy, EGLint name);

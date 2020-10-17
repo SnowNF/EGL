@@ -164,7 +164,7 @@ struct dri2_egl_display
    __DRIscreen              *dri_screen;
    int                       own_dri_screen;
    const __DRIconfig       **driver_configs;
-   void                     *driver;
+   void                     *driver;    //返回dlopen的so文件的指针
    const __DRIcoreExtension       *core;
    const __DRIimageDriverExtension *image_driver;
    const __DRIdri2Extension       *dri2;
@@ -192,10 +192,10 @@ struct dri2_egl_display
    struct gbm_dri_device    *gbm_dri;
 #endif
 
-   char                     *driver_name;
+   char                     *driver_name;   //swrast
 
    const __DRIextension    **loader_extensions;
-   const __DRIextension    **driver_extensions;
+   const __DRIextension    **driver_extensions; //__driDriverGetExtensions_swrast函数的*handle
 
 #ifdef HAVE_X11_PLATFORM
    xcb_connection_t         *conn;

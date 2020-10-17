@@ -46,6 +46,7 @@
 #include "egllog.h"
 #include "eglimage.h"
 #include "eglsync.h"
+#include "../EGL_config.h"
 
 /* Includes for _eglNativePlatformDetectNativeDisplay */
 #ifdef HAVE_MINCORE
@@ -128,7 +129,7 @@ _eglPointerIsDereferencable(void *p)
 
    return (valid & 0x01) == 0x01;
 #else
-   return p != NULL;
+   return (EGLBoolean )(p != NULL);
 #endif
 }
 
@@ -144,7 +145,10 @@ _eglNativePlatformDetectNativeDisplay(void *nativeDisplay)
 
    if (_eglPointerIsDereferencable(nativeDisplay)) {
       void *first_pointer = *(void **) nativeDisplay;
-
+#ifdef MY_DEBUG
+      _eglLog(_EGL_DEBUG,"Native display printer is a generic pointer. \
+the first pointer is : %p",first_pointer);
+#endif
       (void) first_pointer; /* silence unused var warning */
 
 #ifdef HAVE_WAYLAND_PLATFORM
@@ -188,11 +192,11 @@ _eglGetNativePlatform(void *nativeDisplay)
 
    if (native_platform == _EGL_INVALID_PLATFORM) {
       native_platform = _eglNativePlatformDetectNativeDisplay(nativeDisplay);
-      detection_method = "autodetected";
+      detection_method = "auto detected by application calls.";
    }
 
    if (native_platform == _EGL_INVALID_PLATFORM) {
-      native_platform = _EGL_NATIVE_PLATFORM;
+      native_platform = _EGL_NATIVE_PLATFORM;  //_EGL_PLATFORM_X11
       detection_method = "build-time configuration";
    }
 
@@ -249,29 +253,33 @@ _eglFindDisplay(_EGLPlatformType plat, void *plat_dpy)
 
    /* search the display list first */
    dpy = _eglGlobal.DisplayList;
-   while (dpy) {
+   while (dpy) {//空指针是false..因此此时display结构体(链表)不为空.
+                            //  ↓均满足
       if (dpy->Platform == plat && dpy->PlatformDisplay == plat_dpy)
-         break;
-      dpy = dpy->Next;
+         break;//如果有同样的display就停止检索，使用这个display。
+      dpy = dpy->Next;//没有就指到下一个结构体（链表结构)
+       //一直指到空指针（没有下一个结构体）while不满足。。。
    }
 
    /* create a new display */
-   if (!dpy) {
-      dpy = calloc(1, sizeof(_EGLDisplay));
-      if (dpy) {
+   if (!dpy) {  //如果dpy是空指针就执行以下代码。
+      dpy = calloc(1, sizeof(_EGLDisplay));//申请一个长度为_EGLDisplay的内存空间。
+      if (dpy) {//不是空指针（申请成功）执行以下代码
          mtx_init(&dpy->Mutex, mtx_plain);
-         dpy->Platform = plat;
+         dpy->Platform = plat;  //为新的结构体装东西
          dpy->PlatformDisplay = plat_dpy;
 
          /* add to the display list */ 
-         dpy->Next = _eglGlobal.DisplayList;
-         _eglGlobal.DisplayList = dpy;
+         dpy->Next = _eglGlobal.DisplayList;//指向上一个？
+         _eglGlobal.DisplayList = dpy;//替代原来上一个的位置
+      } else{//在前面添加结构体型链表
+          _eglLog(_EGL_FATAL,"Fail to create a new Display");
       }
    }
 
    mtx_unlock(_eglGlobal.Mutex);
 
-   return dpy;
+   return dpy;//返回新的or相同的display
 }
 
 
@@ -353,12 +361,12 @@ _eglCheckDisplayHandle(EGLDisplay dpy)
    cur = _eglGlobal.DisplayList;
    while (cur) {
       if (cur == (_EGLDisplay *) dpy)
-         break;
+         break;//如果在链表中发现相同的就break,否则一直指到NULL
       cur = cur->Next;
    }
    mtx_unlock(_eglGlobal.Mutex);
-   return (cur != NULL);
-}
+   return (EGLBoolean)(cur != NULL);//cur为NULL返回false
+}//有效返回TRUE
 
 
 /**
