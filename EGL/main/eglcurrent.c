@@ -324,6 +324,11 @@ _eglDebugReportFullv(EGLenum error, const char *command, const char *funcName,
    if (callback != NULL) {
       char *buf = NULL;
 
+      //by hand
+      int vasprintf (char **__restrict __ptr, const char *__restrict __f,
+                  _G_va_list __arg);
+
+
       if (message != NULL) {
          if (vasprintf(&buf, message, args) < 0) {
             buf = NULL;
