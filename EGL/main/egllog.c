@@ -126,11 +126,23 @@ _eglSetLogLevel(EGLint level)
 /**
  * The default logger.  It prints the message to stderr.
  */
+
+/*
 static void
 _eglDefaultLogger(EGLint level, const char *msg)
 {
    fprintf(stderr, "libEGL %s: %s\n", level_strings[level], msg);
 
+}
+
+*/
+
+char* levels[4] = {"0;41","0;43","0;32","0;36"};
+
+static void
+_eglDefaultLogger(EGLint level,const char *msg){
+	fprintf(stderr,"\033[%smlibEGL %s : %s\033[0m\n",levels[level],level_strings[level],msg);
+	
 }
 
 
