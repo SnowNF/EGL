@@ -161,20 +161,20 @@ struct dri2_egl_display
 
    int                       dri2_major;
    int                       dri2_minor;
-   __DRIscreen              *dri_screen;
-   int                       own_dri_screen;
+   __DRIscreen              *dri_screen;    //createNewScreen2()函数返回
+   int                       own_dri_screen;    // 1 ?
    const __DRIconfig       **driver_configs;
    void                     *driver;    //返回dlopen的so文件的指针
    const __DRIcoreExtension       *core;
    const __DRIimageDriverExtension *image_driver;
    const __DRIdri2Extension       *dri2;
-   const __DRIswrastExtension     *swrast;
-   const __DRI2flushExtension     *flush;
+   const __DRIswrastExtension     *swrast;  //dri2_bind_extensions()来初始化
+   const __DRI2flushExtension     *flush;    //dri2_bind_extensions()来初始化
    const __DRItexBufferExtension  *tex_buffer;
-   const __DRIimageExtension      *image;
-   const __DRIrobustnessExtension *robustness;
+   const __DRIimageExtension      *image;   //NULL
+   const __DRIrobustnessExtension *robustness;  //NULL
    const __DRI2configQueryExtension *config;
-   const __DRI2fenceExtension *fence;
+   const __DRI2fenceExtension *fence;   //NULL
    const __DRI2rendererQueryExtension *rendererQuery;
    const __DRI2interopExtension *interop;
    int                       fd;

@@ -75,7 +75,7 @@ _eglIsApiValid(EGLenum api)
    /* OpenGL is not a valid/supported API on Android */
    return api == EGL_OPENGL_ES_API;
 #else
-   return (api == EGL_OPENGL_ES_API || api == EGL_OPENGL_API);
+   return (EGLBoolean)(api == EGL_OPENGL_ES_API || api == EGL_OPENGL_API);
 #endif
 }
 

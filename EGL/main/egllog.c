@@ -137,7 +137,7 @@ _eglDefaultLogger(EGLint level, const char *msg)
 
 */
 
-char* levels[4] = {"0;41","0;43","0;32","0;36"};
+char* levels[4] = {"0;31","0;33","0;32","0;36"};
 
 static void
 _eglDefaultLogger(EGLint level,const char *msg){

@@ -57,19 +57,19 @@ struct _egl_config
    EGLint RedSize;
    EGLint DepthSize;
    EGLint StencilSize;
-   EGLint ConfigCaveat;
-   EGLint ConfigID;
+   EGLint ConfigCaveat; //EGL_NONE
+   EGLint ConfigID;  //-1
    EGLint Level;
    EGLint MaxPbufferHeight;
    EGLint MaxPbufferPixels;
    EGLint MaxPbufferWidth;
    EGLint NativeRenderable;
    EGLint NativeVisualID;
-   EGLint NativeVisualType;
+   EGLint NativeVisualType;   //EGL_NONE  inited by _eglInitConfig()
    EGLint Samples;
    EGLint SampleBuffers;
    EGLint SurfaceType;
-   EGLint TransparentType;
+   EGLint TransparentType; //EGL_NONE  inited by _eglInitConfig()
    EGLint TransparentBlueValue;
    EGLint TransparentGreenValue;
    EGLint TransparentRedValue;
@@ -79,7 +79,7 @@ struct _egl_config
    EGLint MaxSwapInterval;
    EGLint LuminanceSize;
    EGLint AlphaMaskSize;
-   EGLint ColorBufferType;
+   EGLint ColorBufferType; //EGL_RGB_BUFFER  inited by _eglInitConfig()
    EGLint RenderableType;
    EGLint MatchNativePixmap;
    EGLint Conformant;

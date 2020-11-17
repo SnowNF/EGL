@@ -421,7 +421,7 @@ dri2_bind_extensions(struct dri2_egl_display *dri2_dpy,
    EGLBoolean ret = EGL_TRUE;
    void *field;
 
-   //以下代码执行会初始化: dri2_dpy->swrast
+   //以下代码会初始化: dri2_dpy->swrast
 
    for (i = 0; extensions[i]; i++) {
       _eglLog(_EGL_DEBUG, "found extension `%s'", extensions[i]->name);
@@ -619,13 +619,14 @@ dri2_setup_screen(_EGLDisplay *disp)
       api_mask = dri2_dpy->image_driver->getAPIMask(dri2_dpy->dri_screen);
    } else if (dri2_dpy->dri2) {
       api_mask = dri2_dpy->dri2->getAPIMask(dri2_dpy->dri_screen);
-   } else {
+   } else {//一定执行此处
       assert(dri2_dpy->swrast);
       api_mask = 1 << __DRI_API_OPENGL |
                  1 << __DRI_API_GLES |
                  1 << __DRI_API_GLES2 |
                  1 << __DRI_API_GLES3;
    }
+    //api_mask is 23
 
    disp->ClientAPIs = 0;
    if ((api_mask & (1 <<__DRI_API_OPENGL)) && _eglIsApiValid(EGL_OPENGL_API))
@@ -636,6 +637,7 @@ dri2_setup_screen(_EGLDisplay *disp)
       disp->ClientAPIs |= EGL_OPENGL_ES2_BIT;
    if ((api_mask & (1 << __DRI_API_GLES3)) && _eglIsApiValid(EGL_OPENGL_ES_API))
       disp->ClientAPIs |= EGL_OPENGL_ES3_BIT_KHR;
+   //disp->ClientAPIs 为 77
 
    assert(dri2_dpy->image_driver || dri2_dpy->dri2 || dri2_dpy->swrast);
    disp->Extensions.KHR_no_config_context = EGL_TRUE;
@@ -643,7 +645,7 @@ dri2_setup_screen(_EGLDisplay *disp)
 
    if (dri2_renderer_query_integer(dri2_dpy,
                                    __DRI2_RENDERER_HAS_FRAMEBUFFER_SRGB))
-      disp->Extensions.KHR_gl_colorspace = EGL_TRUE;
+      disp->Extensions.KHR_gl_colorspace = EGL_TRUE;//会执行
 
    if (dri2_dpy->image_driver ||
        (dri2_dpy->dri2 && dri2_dpy->dri2->base.version >= 3) ||
@@ -654,7 +656,7 @@ dri2_setup_screen(_EGLDisplay *disp)
          disp->Extensions.EXT_create_context_robustness = EGL_TRUE;
    }
 
-   if (dri2_dpy->fence) {
+   if (dri2_dpy->fence) {//不会执行
       disp->Extensions.KHR_fence_sync = EGL_TRUE;
       disp->Extensions.KHR_wait_sync = EGL_TRUE;
       if (dri2_dpy->fence->get_fence_from_cl_event)
@@ -663,13 +665,13 @@ dri2_setup_screen(_EGLDisplay *disp)
 
    disp->Extensions.KHR_reusable_sync = EGL_TRUE;
 
-   if (dri2_dpy->image) {
+   if (dri2_dpy->image) {//不会执行--start
       if (dri2_dpy->image->base.version >= 10 &&
           dri2_dpy->image->getCapabilities != NULL) {
          int capabilities;
 
          capabilities = dri2_dpy->image->getCapabilities(dri2_dpy->dri_screen);
-         disp->Extensions.MESA_drm_image = (capabilities & __DRI_IMAGE_CAP_GLOBAL_NAMES) != 0;
+         disp->Extensions.MESA_drm_image = (EGLBoolean)((capabilities & __DRI_IMAGE_CAP_GLOBAL_NAMES) != 0);
 
          if (dri2_dpy->image->base.version >= 11)
             disp->Extensions.MESA_image_dma_buf_export = EGL_TRUE;
@@ -695,7 +697,7 @@ dri2_setup_screen(_EGLDisplay *disp)
          disp->Extensions.EXT_image_dma_buf_import = EGL_TRUE;
       }
 #endif
-   }
+   }//不会执行--end
 }
 
 /* All platforms but DRM call this function to create the screen, query the
@@ -729,8 +731,10 @@ dri2_create_screen(_EGLDisplay *disp)
                                             &dri2_dpy->driver_configs, disp);
       }
    } else {//总是执行
+       _eglLog(_EGL_DEBUG,"Swrast version : %d",dri2_dpy->swrast->base.version);
       assert(dri2_dpy->swrast);//再是空指针就去死
       if (dri2_dpy->swrast->base.version >= 4) {
+          //Version = 4 , 研究终止
          dri2_dpy->dri_screen =
             dri2_dpy->swrast->createNewScreen2(0, dri2_dpy->loader_extensions,
                                                dri2_dpy->driver_extensions,
@@ -755,13 +759,14 @@ dri2_create_screen(_EGLDisplay *disp)
       if (!dri2_bind_extensions(dri2_dpy, dri2_core_extensions, extensions, false))
          goto cleanup_dri_screen;
    } else {
+       //一定执行此处
       assert(dri2_dpy->swrast);
       if (!dri2_bind_extensions(dri2_dpy, swrast_core_extensions, extensions, false))
          goto cleanup_dri_screen;
    }
 
    dri2_bind_extensions(dri2_dpy, optional_core_extensions, extensions, true);
-   dri2_setup_screen(disp);
+   dri2_setup_screen(disp);//根据disp设置特性的true/false
 
    return EGL_TRUE;
 
@@ -815,7 +820,7 @@ dri2_initialize(_EGLDriver *drv, _EGLDisplay *disp)
       break;
 #endif
 #ifdef HAVE_X11_PLATFORM
-   case _EGL_PLATFORM_X11:
+   case _EGL_PLATFORM_X11://执行以下代码。。。
       ret = dri2_initialize_x11(drv, disp);
       break;
 #endif

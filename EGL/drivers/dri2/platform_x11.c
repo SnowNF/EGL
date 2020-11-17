@@ -174,7 +174,7 @@ swrastGetImage(__DRIdrawable * read,
       _eglLog(_EGL_WARNING, "error in xcb_get_image");
       free(error);
    } else {
-      uint32_t bytes = xcb_get_image_data_length(reply);
+      uint32_t bytes = (uint32_t) xcb_get_image_data_length(reply);
       uint8_t *idata = xcb_get_image_data(reply);
       memcpy(data, idata, bytes);
    }
@@ -213,7 +213,7 @@ dri2_x11_create_surface(_EGLDriver *drv, _EGLDisplay *disp, EGLint type,
    const __DRIconfig *config;
 
    STATIC_ASSERT(sizeof(uintptr_t) == sizeof(native_surface));
-   drawable = (uintptr_t) native_surface;
+   drawable = (xcb_drawable_t) (uintptr_t) native_surface;
 
    (void) drv;
 
@@ -236,9 +236,9 @@ dri2_x11_create_surface(_EGLDriver *drv, _EGLDisplay *disp, EGLint type,
       }
 
       dri2_surf->drawable = xcb_generate_id(dri2_dpy->conn);
-      xcb_create_pixmap(dri2_dpy->conn, conf->BufferSize,
+      xcb_create_pixmap(dri2_dpy->conn, (uint8_t)conf->BufferSize,
                        dri2_surf->drawable, screen->root,
-			dri2_surf->base.Width, dri2_surf->base.Height);
+            (uint16_t)dri2_surf->base.Width,(uint16_t) dri2_surf->base.Height);
    } else {
       if (!drawable) {
          if (type == EGL_WINDOW_BIT)
@@ -1217,7 +1217,7 @@ dri2_initialize_x11_swrast(_EGLDriver *drv, _EGLDisplay *disp)
 
    dri2_dpy->loader_extensions = swrast_loader_extensions;
 
-   if (!dri2_create_screen(disp))
+   if (!dri2_create_screen(disp))//return TRUE
       goto cleanup_driver;
 
    if (!dri2_x11_add_configs_for_visuals(dri2_dpy, disp, true))
@@ -1514,7 +1514,7 @@ dri2_initialize_x11(_EGLDriver *drv, _EGLDisplay *disp)
       }
 #endif
    } else {//通常加载swrast驱动。。
-      initialized = dri2_initialize_x11_swrast(drv, disp);
+      initialized = dri2_initialize_x11_swrast(drv, disp);//return TRUE
    }
 
    return initialized;

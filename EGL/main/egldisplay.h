@@ -99,28 +99,28 @@ struct _egl_extensions
    EGLBoolean CHROMIUM_sync_control;
 
    EGLBoolean EXT_buffer_age;
-   EGLBoolean EXT_create_context_robustness;
+   EGLBoolean EXT_create_context_robustness;    //false
    EGLBoolean EXT_image_dma_buf_import;
    EGLBoolean EXT_swap_buffers_with_damage;
 
-   EGLBoolean KHR_cl_event2;
-   EGLBoolean KHR_create_context;
-   EGLBoolean KHR_fence_sync;
-   EGLBoolean KHR_get_all_proc_addresses;
-   EGLBoolean KHR_gl_colorspace;
-   EGLBoolean KHR_gl_renderbuffer_image;
-   EGLBoolean KHR_gl_texture_2D_image;
-   EGLBoolean KHR_gl_texture_3D_image;
-   EGLBoolean KHR_gl_texture_cubemap_image;
-   EGLBoolean KHR_image_base;
-   EGLBoolean KHR_image_pixmap;
-   EGLBoolean KHR_no_config_context;
-   EGLBoolean KHR_reusable_sync;
-   EGLBoolean KHR_surfaceless_context;
-   EGLBoolean KHR_wait_sync;
+   EGLBoolean KHR_cl_event2;    //false
+   EGLBoolean KHR_create_context;   //true
+   EGLBoolean KHR_fence_sync;    //false
+   EGLBoolean KHR_get_all_proc_addresses;    //false
+   EGLBoolean KHR_gl_colorspace;    //true
+   EGLBoolean KHR_gl_renderbuffer_image;  //false
+   EGLBoolean KHR_gl_texture_2D_image;    //false
+   EGLBoolean KHR_gl_texture_3D_image;       //false
+   EGLBoolean KHR_gl_texture_cubemap_image;    //false
+   EGLBoolean KHR_image_base;    //false
+   EGLBoolean KHR_image_pixmap;  //false
+   EGLBoolean KHR_no_config_context;   //true
+   EGLBoolean KHR_reusable_sync;    //true
+   EGLBoolean KHR_surfaceless_context;    //true
+   EGLBoolean KHR_wait_sync;     //false
 
-   EGLBoolean MESA_drm_image;
-   EGLBoolean MESA_image_dma_buf_export;
+   EGLBoolean MESA_drm_image;    //false
+   EGLBoolean MESA_image_dma_buf_export;  //false
 
    EGLBoolean NOK_swap_region;
    EGLBoolean NOK_texture_from_pixmap;
@@ -139,8 +139,8 @@ struct _egl_display
 
    mtx_t Mutex;
 
-   _EGLPlatformType Platform; /**< The type of the platform display */
-   void *PlatformDisplay;     /**< A pointer to the platform display */
+   _EGLPlatformType Platform; /**< The type of the platform display */  //added by func: _eglFindDisplay() ,might be   _EGL_PLATFORM_X11
+   void *PlatformDisplay;     /**< A pointer to the platform display */  //指向eglGetDisplay()的第一个参数
 
    _EGLDriver *Driver;        /**< Matched driver of the display */
    EGLBoolean Initialized;    /**< True if the display is initialized */
@@ -153,13 +153,13 @@ struct _egl_display
 
    /* these fields are set by the driver during init */
    void *DriverData;          /**< Driver private data */ //might be loaded at dri2_initialize_x11_swrast()
-   EGLint Version;            /**< EGL version major*10+minor */
+   EGLint Version;     //14   /**< EGL version major*10+minor */
    EGLint ClientAPIs;         /**< Bitmask of APIs supported (EGL_xxx_BIT) */
    _EGLExtensions Extensions; /**< Extensions supported */
 
    /* these fields are derived from above */
    char VersionString[100];                        /**< EGL_VERSION */
-   char ClientAPIsString[100];                     /**< EGL_CLIENT_APIS */
+   char ClientAPIsString[100];  //OpenGL(ES)       /**< EGL_CLIENT_APIS */
    char ExtensionsString[_EGL_MAX_EXTENSIONS_LEN]; /**< EGL_EXTENSIONS */
 
    _EGLArray *Screens;

@@ -234,7 +234,7 @@ _eglCheckSync(_EGLDisplay *disp, _EGLSync *s, const char *msg)
  */
 static inline _EGLDisplay *
 _eglLockDisplay(EGLDisplay display)
-{
+{//无效display返回NULL
    _EGLDisplay *dpy = _eglLookupDisplay(display);
    if (dpy)//如果display无效则dpy为NULL则dpy为false
       mtx_lock(&dpy->Mutex);//无效不上锁
@@ -527,15 +527,19 @@ _eglCreateExtensionsString(_EGLDisplay *dpy)
 static void
 _eglCreateAPIsString(_EGLDisplay *dpy)
 {
+   //支持OpenGL
    if (dpy->ClientAPIs & EGL_OPENGL_BIT)
       strcat(dpy->ClientAPIsString, "OpenGL ");
+   //str cat: 拼接字符串..把后面的拼接到前面..
 
+   //支持OenGLES
    if (dpy->ClientAPIs & EGL_OPENGL_ES_BIT ||
        dpy->ClientAPIs & EGL_OPENGL_ES2_BIT ||
        dpy->ClientAPIs & EGL_OPENGL_ES3_BIT_KHR) {
       strcat(dpy->ClientAPIsString, "OpenGL_ES ");
    }
 
+   //不支持OpenVG
    if (dpy->ClientAPIs & EGL_OPENVG_BIT)
       strcat(dpy->ClientAPIsString, "OpenVG ");
 
@@ -544,7 +548,7 @@ _eglCreateAPIsString(_EGLDisplay *dpy)
 
 static void
 _eglComputeVersion(_EGLDisplay *disp)
-{
+{//最后版本为14
    disp->Version = 14;
 
    if (disp->Extensions.KHR_fence_sync &&
@@ -602,11 +606,12 @@ eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor)
       disp->Extensions.KHR_get_all_proc_addresses = EGL_TRUE;
 
       _eglComputeVersion(disp);
-      _eglCreateExtensionsString(disp);
-      _eglCreateAPIsString(disp);
+      _eglCreateExtensionsString(disp);//???
+      _eglCreateAPIsString(disp);//给API上名字..OpenGLES..OpenGL
       snprintf(disp->VersionString, sizeof(disp->VersionString),
               "%d.%d (%s)", disp->Version / 10, disp->Version % 10,
               disp->Driver->Name);
+      _eglLog(_EGL_INFO,"Display_VersionString : %s ",disp->VersionString);
    }
 
    /* Update applications version of major and minor if not NULL */
@@ -675,6 +680,8 @@ EGLBoolean EGLAPIENTRY
 eglGetConfigs(EGLDisplay dpy, EGLConfig *configs,
               EGLint config_size, EGLint *num_config)
 {
+    //It seem that gl4es does not use this func.
+    //skip learning this.
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLDriver *drv;
    EGLBoolean ret;

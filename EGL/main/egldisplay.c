@@ -145,10 +145,10 @@ _eglNativePlatformDetectNativeDisplay(void *nativeDisplay)
 
    if (_eglPointerIsDereferencable(nativeDisplay)) {
       void *first_pointer = *(void **) nativeDisplay;
-#ifdef MY_DEBUG
+
       _eglLog(_EGL_DEBUG,"Native display printer is a generic pointer. \
 the first pointer is : %p",first_pointer);
-#endif
+
       (void) first_pointer; /* silence unused var warning */
 
 #ifdef HAVE_WAYLAND_PLATFORM
@@ -266,7 +266,7 @@ _eglFindDisplay(_EGLPlatformType plat, void *plat_dpy)
       dpy = calloc(1, sizeof(_EGLDisplay));//申请一个长度为_EGLDisplay的内存空间。
       if (dpy) {//不是空指针（申请成功）执行以下代码
          mtx_init(&dpy->Mutex, mtx_plain);
-         dpy->Platform = plat;  //为新的结构体装东西
+         dpy->Platform = plat;  //为新的结构体装东西: _EGL_PLATFORM_X11
          dpy->PlatformDisplay = plat_dpy;
 
          /* add to the display list */ 

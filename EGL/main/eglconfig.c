@@ -58,6 +58,7 @@
 void
 _eglInitConfig(_EGLConfig *conf, _EGLDisplay *dpy, EGLint id)
 {
+   //id = -1
    memset(conf, 0, sizeof(*conf));
 
    conf->Display = dpy;
