@@ -117,7 +117,7 @@ struct dri2_egl_display_vtbl {
    _EGLImage* (*create_image)(_EGLDriver *drv, _EGLDisplay *dpy,
                               _EGLContext *ctx, EGLenum target,
                               EGLClientBuffer buffer,
-                              const EGLint *attr_list);
+                              const EGLint *attr_list);//never used
 
    EGLBoolean (*swap_buffers)(_EGLDriver *drv, _EGLDisplay *dpy,
                               _EGLSurface *surf);

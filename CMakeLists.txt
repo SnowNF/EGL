@@ -42,7 +42,7 @@ add_library(EGL SHARED
 
 
 
-        #c files
+        #c file
         EGL/drivers/dri2/egl_dri2.c
         EGL/drivers/dri2/egl_dri2.h
         EGL/drivers/dri2/egl_dri2_fallbacks.h
@@ -75,10 +75,6 @@ add_library(EGL SHARED
         EGL/main/eglsync.c
         EGL/main/eglsync.h
         EGL/main/egltypedefs.h
-        EGL/loader/pci_id_driver_map.h
-        EGL/loader/pci_id_driver_map.c
-        EGL/loader/loader.c
-        EGL/loader/loader.h
 
         )
 target_link_libraries(EGL pthread xcb xcb-dri2 dl xcb-xfixes X11-xcb)

@@ -35,6 +35,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "c11/threads.h"
 
 #include "eglcontext.h"
@@ -429,7 +430,7 @@ _eglPutResource(_EGLResource *res)
 {
    assert(res && res->RefCount > 0);
    res->RefCount--;
-   return (!res->RefCount);
+   return (EGLBoolean)(!res->RefCount);
 }
 
 
@@ -482,6 +483,9 @@ _eglUnlinkResource(_EGLResource *res, _EGLResourceType type)
 static EGLBoolean
 _eglParseX11DisplayAttribList(const EGLint *attrib_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    int i;
 
    if (attrib_list == NULL) {
@@ -497,25 +501,30 @@ _eglParseX11DisplayAttribList(const EGLint *attrib_list)
        * 
        * Mesa supports connecting to only the default screen, so we reject
        * screen != 0.
-       */
+       *//*
       if (attrib != EGL_PLATFORM_X11_SCREEN_EXT || value != 0) {
          _eglError(EGL_BAD_ATTRIBUTE, "eglGetPlatformDisplay");
          return EGL_FALSE;
       }
    }
 
-   return EGL_TRUE;
+   return EGL_TRUE;*/
+    return NULL;
 }
 
 _EGLDisplay*
 _eglGetX11Display(Display *native_display,
                   const EGLint *attrib_list)
-{
+{    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    if (!_eglParseX11DisplayAttribList(attrib_list)) {
       return NULL;
    }
 
-   return _eglFindDisplay(_EGL_PLATFORM_X11, native_display);
+   return _eglFindDisplay(_EGL_PLATFORM_X11, native_display);*/
+    return NULL;
 }
 #endif /* HAVE_X11_PLATFORM */
 

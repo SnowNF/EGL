@@ -314,7 +314,10 @@ _eglMatchDriver(_EGLDisplay *dpy, EGLBoolean test_only)
 
 __eglMustCastToProperFunctionPointerType
 _eglGetDriverProc(const char *procname)
-{
+{    //used by shader
+   //FIXME: need more test.
+   fprintf(stderr,"libEGL: unsupported method : %s\n",__func__);
+
    EGLint i;
    _EGLProc proc = NULL;
 
@@ -337,6 +340,7 @@ _eglGetDriverProc(const char *procname)
    }
 
    return proc;
+ //  return NULL;
 }
 
 

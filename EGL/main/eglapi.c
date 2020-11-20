@@ -217,7 +217,9 @@ _eglCheckConfig(_EGLDisplay *disp, _EGLConfig *conf, const char *msg)
 
 static inline _EGLDriver *
 _eglCheckSync(_EGLDisplay *disp, _EGLSync *s, const char *msg)
-{
+{    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDriver *drv = _eglCheckDisplay(disp, msg);
    if (!drv)
       return NULL;
@@ -225,7 +227,8 @@ _eglCheckSync(_EGLDisplay *disp, _EGLSync *s, const char *msg)
       _eglError(EGL_BAD_PARAMETER, msg);
       return NULL;
    }
-   return drv;
+   return drv;*/
+    return NULL;
 }
 
 
@@ -291,7 +294,9 @@ _eglSetFuncName(const char *funcName, _EGLDisplay *disp, EGLenum objectType, _EG
  */
 EGLint
 _eglConvertIntsToAttribs(const EGLint *int_list, EGLAttrib **out_attrib_list)
-{
+{    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    size_t len = 0;
    EGLAttrib *attrib_list;
 
@@ -320,13 +325,14 @@ _eglConvertIntsToAttribs(const EGLint *int_list, EGLAttrib **out_attrib_list)
    attrib_list[2*len] = EGL_NONE;
 
    *out_attrib_list = attrib_list;
-   return EGL_SUCCESS;
+   return EGL_SUCCESS;*/
+    return 0;
 }
 
 
 static EGLint *
 _eglConvertAttribsToInt(const EGLAttrib *attr_list)
-{
+{exit(0);
    EGLint *int_attribs = NULL;
 
    /* Convert attributes from EGLAttrib[] to EGLint[] */
@@ -377,7 +383,10 @@ eglGetDisplay(EGLNativeDisplayType nativeDisplay)
 static EGLDisplay
 _eglGetPlatformDisplayCommon(EGLenum platform, void *native_display,
 			     const EGLint *attrib_list)
-{
+{    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *dpy;
 
    switch (platform) {
@@ -407,21 +416,27 @@ _eglGetPlatformDisplayCommon(EGLenum platform, void *native_display,
       RETURN_EGL_ERROR(NULL, EGL_BAD_PARAMETER, NULL);
    }
 
-   return _eglGetDisplayHandle(dpy);
+   return _eglGetDisplayHandle(dpy);*/
+    return NULL;
 }
 
 static EGLDisplay EGLAPIENTRY
 eglGetPlatformDisplayEXT(EGLenum platform, void *native_display,
                          const EGLint *attrib_list)
-{
+{    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGL_FUNC_START(NULL, EGL_OBJECT_THREAD_KHR, NULL, EGL_NO_DISPLAY);
-   return _eglGetPlatformDisplayCommon(platform, native_display, attrib_list);
+   return _eglGetPlatformDisplayCommon(platform, native_display, attrib_list);*/
+    return NULL;
 }
 
 EGLDisplay EGLAPIENTRY
 eglGetPlatformDisplay(EGLenum platform, void *native_display,
                       const EGLAttrib *attrib_list)
-{
+{    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    EGLDisplay display;
    EGLint *int_attribs;
 
@@ -433,7 +448,8 @@ eglGetPlatformDisplay(EGLenum platform, void *native_display,
 
    display = _eglGetPlatformDisplayCommon(platform, native_display, int_attribs);
    free(int_attribs);
-   return display;
+   return display;*/
+    return NULL;
 }
 
 /**
@@ -682,6 +698,8 @@ eglGetConfigs(EGLDisplay dpy, EGLConfig *configs,
 {
     //It seem that gl4es does not use this func.
     //skip learning this.
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLDriver *drv;
    EGLBoolean ret;
@@ -691,7 +709,8 @@ eglGetConfigs(EGLDisplay dpy, EGLConfig *configs,
    _EGL_CHECK_DISPLAY(disp, EGL_FALSE, drv);
    ret = drv->API.GetConfigs(drv, disp, configs, config_size, num_config);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
@@ -833,6 +852,9 @@ EGLBoolean EGLAPIENTRY
 eglQueryContext(EGLDisplay dpy, EGLContext ctx,
                 EGLint attribute, EGLint *value)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLContext *context = _eglLookupContext(ctx, disp);
    _EGLDriver *drv;
@@ -843,7 +865,8 @@ eglQueryContext(EGLDisplay dpy, EGLContext ctx,
    _EGL_CHECK_CONTEXT(disp, context, EGL_FALSE, drv);
    ret = drv->API.QueryContext(drv, disp, context, attribute, value);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
@@ -906,6 +929,9 @@ eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config,
 static void *
 fixupNativeWindow(_EGLDisplay *disp, void *native_window)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
 #ifdef HAVE_X11_PLATFORM
    if (disp->Platform == _EGL_PLATFORM_X11 && native_window != NULL) {
       /* The `native_window` parameter for the X11 platform differs between
@@ -914,11 +940,12 @@ fixupNativeWindow(_EGLDisplay *disp, void *native_window)
        * `Window`. In eglCreatePlatformWindowSurfaceEXT(), the type is
        * `Window*`.  Convert `Window*` to `Window` because that's what
        * dri2_x11_create_window_surface() expects.
-       */
+       *//*
       return (void *)(* (Window*) native_window);
    }
 #endif
-   return native_window;
+   return native_window;*/
+    return NULL;
 }
 
 static EGLSurface EGLAPIENTRY
@@ -926,13 +953,17 @@ eglCreatePlatformWindowSurfaceEXT(EGLDisplay dpy, EGLConfig config,
                                   void *native_window,
                                   const EGLint *attrib_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
 
    native_window = fixupNativeWindow(disp, native_window);
 
    _EGL_FUNC_START(disp, EGL_OBJECT_DISPLAY_KHR, NULL, EGL_NO_SURFACE);
    return _eglCreateWindowSurfaceCommon(disp, config, native_window,
-                                        attrib_list);
+                                        attrib_list);*/
+    return NULL;
 }
 
 
@@ -941,6 +972,9 @@ eglCreatePlatformWindowSurface(EGLDisplay dpy, EGLConfig config,
                                void *native_window,
                                const EGLAttrib *attrib_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    EGLSurface surface;
    EGLint *int_attribs;
@@ -955,12 +989,17 @@ eglCreatePlatformWindowSurface(EGLDisplay dpy, EGLConfig config,
    surface = _eglCreateWindowSurfaceCommon(disp, config, native_window,
                                            int_attribs);
    free(int_attribs);
-   return surface;
+   return surface;*/
+    return NULL;
 }
 
 static void *
 fixupNativePixmap(_EGLDisplay *disp, void *native_pixmap)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
 #ifdef HAVE_X11_PLATFORM
       /* The `native_pixmap` parameter for the X11 platform differs between
        * eglCreatePixmapSurface() and eglCreatePlatformPixmapSurfaceEXT(). In
@@ -968,17 +1007,21 @@ fixupNativePixmap(_EGLDisplay *disp, void *native_pixmap)
        * `Pixmap`. In eglCreatePlatformPixmapSurfaceEXT(), the type is
        * `Pixmap*`.  Convert `Pixmap*` to `Pixmap` because that's what
        * dri2_x11_create_pixmap_surface() expects.
-       */
+       *//*
    if (disp->Platform == _EGL_PLATFORM_X11 && native_pixmap != NULL)
       return (void *)(* (Pixmap*) native_pixmap);
 #endif
-   return native_pixmap;
+   return native_pixmap;*/
+    return NULL;
 }
 
 static EGLSurface
 _eglCreatePixmapSurfaceCommon(_EGLDisplay *disp, EGLConfig config,
                               void *native_pixmap, const EGLint *attrib_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLConfig *conf = _eglLookupConfig(config, disp);
    _EGLDriver *drv;
    _EGLSurface *surf;
@@ -995,7 +1038,7 @@ _eglCreatePixmapSurfaceCommon(_EGLDisplay *disp, EGLConfig config,
        *
        * This check must occur before checking the EGLConfig, which emits
        * EGL_BAD_CONFIG.
-       */
+       *//*
       RETURN_EGL_ERROR(disp, EGL_BAD_NATIVE_PIXMAP, EGL_NO_SURFACE);
    }
 #endif
@@ -1009,7 +1052,8 @@ _eglCreatePixmapSurfaceCommon(_EGLDisplay *disp, EGLConfig config,
                                        attrib_list);
    ret = (surf) ? _eglLinkSurface(surf) : EGL_NO_SURFACE;
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return NULL;
 }
 
 
@@ -1017,12 +1061,17 @@ EGLSurface EGLAPIENTRY
 eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config,
                        EGLNativePixmapType pixmap, const EGLint *attrib_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
 
    _EGL_FUNC_START(disp, EGL_OBJECT_DISPLAY_KHR, NULL, EGL_NO_SURFACE);
    STATIC_ASSERT(sizeof(void*) == sizeof(pixmap));
    return _eglCreatePixmapSurfaceCommon(disp, config, (void*) pixmap,
-                                         attrib_list);
+                                         attrib_list);*/
+    return NULL;
 }
 
 static EGLSurface EGLAPIENTRY
@@ -1030,12 +1079,16 @@ eglCreatePlatformPixmapSurfaceEXT(EGLDisplay dpy, EGLConfig config,
                                    void *native_pixmap,
                                    const EGLint *attrib_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
 
    _EGL_FUNC_START(disp, EGL_OBJECT_DISPLAY_KHR, NULL, EGL_NO_SURFACE);
    native_pixmap = fixupNativePixmap(disp, native_pixmap);
    return _eglCreatePixmapSurfaceCommon(disp, config, native_pixmap,
-                                        attrib_list);
+                                        attrib_list);*/
+    return NULL;
 }
 
 
@@ -1044,6 +1097,10 @@ eglCreatePlatformPixmapSurface(EGLDisplay dpy, EGLConfig config,
                                void *native_pixmap,
                                const EGLAttrib *attrib_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    EGLSurface surface;
    EGLint *int_attribs;
@@ -1058,7 +1115,8 @@ eglCreatePlatformPixmapSurface(EGLDisplay dpy, EGLConfig config,
    surface = _eglCreatePixmapSurfaceCommon(disp, config, native_pixmap,
                                            int_attribs);
    free(int_attribs);
-   return surface;
+   return surface;*/
+    return NULL;
 }
 
 
@@ -1104,7 +1162,9 @@ eglDestroySurface(EGLDisplay dpy, EGLSurface surface)
 EGLBoolean EGLAPIENTRY
 eglQuerySurface(EGLDisplay dpy, EGLSurface surface,
                 EGLint attribute, EGLint *value)
-{
+{    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSurface *surf = _eglLookupSurface(surface, disp);
    _EGLDriver *drv;
@@ -1114,13 +1174,17 @@ eglQuerySurface(EGLDisplay dpy, EGLSurface surface,
    _EGL_CHECK_SURFACE(disp, surf, EGL_FALSE, drv);
    ret = drv->API.QuerySurface(drv, disp, surf, attribute, value);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 EGLBoolean EGLAPIENTRY
 eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface,
                  EGLint attribute, EGLint value)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSurface *surf = _eglLookupSurface(surface, disp);
    _EGLDriver *drv;
@@ -1130,13 +1194,17 @@ eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface,
    _EGL_CHECK_SURFACE(disp, surf, EGL_FALSE, drv);
    ret = drv->API.SurfaceAttrib(drv, disp, surf, attribute, value);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
 EGLBoolean EGLAPIENTRY
 eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSurface *surf = _eglLookupSurface(surface, disp);
    _EGLDriver *drv;
@@ -1146,13 +1214,17 @@ eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer)
    _EGL_CHECK_SURFACE(disp, surf, EGL_FALSE, drv);
    ret = drv->API.BindTexImage(drv, disp, surf, buffer);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
 EGLBoolean EGLAPIENTRY
 eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSurface *surf = _eglLookupSurface(surface, disp);
    _EGLDriver *drv;
@@ -1162,7 +1234,8 @@ eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer)
    _EGL_CHECK_SURFACE(disp, surf, EGL_FALSE, drv);
    ret = drv->API.ReleaseTexImage(drv, disp, surf, buffer);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
@@ -1220,13 +1293,17 @@ static EGLBoolean
 eglSwapBuffersWithDamageCommon(_EGLDisplay *disp, _EGLSurface *surf,
                                EGLint *rects, EGLint n_rects)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLContext *ctx = _eglGetCurrentContext();
    _EGLDriver *drv;
    EGLBoolean ret;
 
    _EGL_CHECK_SURFACE(disp, surf, EGL_FALSE, drv);
 
-   /* surface must be bound to current context in EGL 1.4 */
+   /* surface must be bound to current context in EGL 1.4 *//*
    if (_eglGetContextHandle(ctx) == EGL_NO_CONTEXT ||
        surf != ctx->DrawSurface)
       RETURN_EGL_ERROR(disp, EGL_BAD_SURFACE, EGL_FALSE);
@@ -1236,32 +1313,46 @@ eglSwapBuffersWithDamageCommon(_EGLDisplay *disp, _EGLSurface *surf,
 
    ret = drv->API.SwapBuffersWithDamageEXT(drv, disp, surf, rects, n_rects);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 static EGLBoolean EGLAPIENTRY
 eglSwapBuffersWithDamageEXT(EGLDisplay dpy, EGLSurface surface,
                             EGLint *rects, EGLint n_rects)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSurface *surf = _eglLookupSurface(surface, disp);
    _EGL_FUNC_START(disp, EGL_OBJECT_SURFACE_KHR, surf, EGL_FALSE);
-   return eglSwapBuffersWithDamageCommon(disp, surf, rects, n_rects);
+   return eglSwapBuffersWithDamageCommon(disp, surf, rects, n_rects);*/
+    return EGL_FALSE;
 }
 
 static EGLBoolean EGLAPIENTRY
 eglSwapBuffersWithDamageKHR(EGLDisplay dpy, EGLSurface surface,
                             EGLint *rects, EGLint n_rects)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSurface *surf = _eglLookupSurface(surface, disp);
    _EGL_FUNC_START(disp, EGL_OBJECT_SURFACE_KHR, surf, EGL_FALSE);
-   return eglSwapBuffersWithDamageCommon(disp, surf, rects, n_rects);
+   return eglSwapBuffersWithDamageCommon(disp, surf, rects, n_rects);*/
+    return EGL_FALSE;
 }
 
 EGLBoolean EGLAPIENTRY
 eglCopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativePixmapType target)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSurface *surf = _eglLookupSurface(surface, disp);
    _EGLDriver *drv;
@@ -1277,13 +1368,18 @@ eglCopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativePixmapType target)
       RETURN_EGL_ERROR(disp, EGL_BAD_NATIVE_PIXMAP, EGL_FALSE);
    ret = drv->API.CopyBuffers(drv, disp, surf, native_pixmap_ptr);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
 static EGLBoolean
 _eglWaitClientCommon(void)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLContext *ctx = _eglGetCurrentContext();
    _EGLDisplay *disp;
    _EGLDriver *drv;
@@ -1295,38 +1391,50 @@ _eglWaitClientCommon(void)
    disp = ctx->Resource.Display;
    mtx_lock(&disp->Mutex);
 
-   /* let bad current context imply bad current surface */
+   /* let bad current context imply bad current surface *//*
    if (_eglGetContextHandle(ctx) == EGL_NO_CONTEXT ||
        _eglGetSurfaceHandle(ctx->DrawSurface) == EGL_NO_SURFACE)
       RETURN_EGL_ERROR(disp, EGL_BAD_CURRENT_SURFACE, EGL_FALSE);
 
-   /* a valid current context implies an initialized current display */
+   /* a valid current context implies an initialized current display *//*
    assert(disp->Initialized);
    drv = disp->Driver;
    ret = drv->API.WaitClient(drv, disp, ctx);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 EGLBoolean EGLAPIENTRY
 eglWaitClient(void)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGL_FUNC_START(NULL, EGL_OBJECT_CONTEXT_KHR, _eglGetCurrentContext(), EGL_FALSE);
-   return _eglWaitClientCommon();
+   return _eglWaitClientCommon();*/
+    return EGL_FALSE;
 }
 
 EGLBoolean EGLAPIENTRY
 eglWaitGL(void)
 {
-   /* Since we only support OpenGL and GLES, eglWaitGL is equivalent to eglWaitClient. */
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   /* Since we only support OpenGL and GLES, eglWaitGL is equivalent to eglWaitClient. *//*
    _EGL_FUNC_START(NULL, EGL_OBJECT_CONTEXT_KHR, _eglGetCurrentContext(), EGL_FALSE);
-   return _eglWaitClientCommon();
+   return _eglWaitClientCommon()*/
+    return EGL_FALSE;
 }
 
 
 EGLBoolean EGLAPIENTRY
 eglWaitNative(EGLint engine)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLContext *ctx = _eglGetCurrentContext();
    _EGLDisplay *disp;
    _EGLDriver *drv;
@@ -1340,47 +1448,62 @@ eglWaitNative(EGLint engine)
    disp = ctx->Resource.Display;
    mtx_lock(&disp->Mutex);
 
-   /* let bad current context imply bad current surface */
+   /* let bad current context imply bad current surface *//*
    if (_eglGetContextHandle(ctx) == EGL_NO_CONTEXT ||
        _eglGetSurfaceHandle(ctx->DrawSurface) == EGL_NO_SURFACE)
       RETURN_EGL_ERROR(disp, EGL_BAD_CURRENT_SURFACE, EGL_FALSE);
 
-   /* a valid current context implies an initialized current display */
+   /* a valid current context implies an initialized current display *//*
    assert(disp->Initialized);
    drv = disp->Driver;
    ret = drv->API.WaitNative(drv, disp, engine);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
 EGLDisplay EGLAPIENTRY
 eglGetCurrentDisplay(void)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLContext *ctx = _eglGetCurrentContext();
    EGLDisplay ret;
 
    ret = (ctx) ? _eglGetDisplayHandle(ctx->Resource.Display) : EGL_NO_DISPLAY;
 
-   RETURN_EGL_SUCCESS(NULL, ret);
+   RETURN_EGL_SUCCESS(NULL, ret);*/
+    return NULL;
 }
 
 
 EGLContext EGLAPIENTRY
 eglGetCurrentContext(void)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLContext *ctx = _eglGetCurrentContext();
    EGLContext ret;
 
    ret = _eglGetContextHandle(ctx);
 
-   RETURN_EGL_SUCCESS(NULL, ret);
+   RETURN_EGL_SUCCESS(NULL, ret);*/
+    return NULL;
 }
 
 
 EGLSurface EGLAPIENTRY
 eglGetCurrentSurface(EGLint readdraw)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLContext *ctx = _eglGetCurrentContext();
    EGLint err = EGL_SUCCESS;
    _EGLSurface *surf;
@@ -1406,7 +1529,8 @@ eglGetCurrentSurface(EGLint readdraw)
 
    ret = _eglGetSurfaceHandle(surf);
 
-   RETURN_EGL_ERROR(NULL, err, ret);
+   RETURN_EGL_ERROR(NULL, err, ret);*/
+    return NULL;
 }
 
 
@@ -1477,6 +1601,10 @@ eglCreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buftype,
                                  EGLClientBuffer buffer, EGLConfig config,
                                  const EGLint *attrib_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLConfig *conf = _eglLookupConfig(config, disp);
    _EGLDriver *drv;
@@ -1491,14 +1619,18 @@ eglCreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buftype,
                                                  conf, attrib_list);
    ret = (surf) ? _eglLinkSurface(surf) : EGL_NO_SURFACE;
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return NULL;
 }
 
 
 EGLBoolean EGLAPIENTRY
 eglReleaseThread(void)
 {
-   /* unbind current contexts */
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   /* unbind current contexts *//*
    if (!_eglIsCurrentThreadDummy()) {
       _EGLThreadInfo *t = _eglGetCurrentThread();
       _EGLContext *ctx = t->CurrentContext;
@@ -1518,7 +1650,8 @@ eglReleaseThread(void)
 
    _eglDestroyCurrentThread();
 
-   RETURN_EGL_SUCCESS(NULL, EGL_TRUE);
+   RETURN_EGL_SUCCESS(NULL, EGL_TRUE);*/
+    return EGL_FALSE;
 }
 
 
@@ -1526,6 +1659,10 @@ static EGLImage
 _eglCreateImageCommon(_EGLDisplay *disp, EGLContext ctx, EGLenum target,
                   EGLClientBuffer buffer, const EGLint *attr_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+/*
    _EGLContext *context = _eglLookupContext(ctx, disp);
    _EGLDriver *drv;
    _EGLImage *img;
@@ -1538,7 +1675,7 @@ _eglCreateImageCommon(_EGLDisplay *disp, EGLContext ctx, EGLenum target,
       RETURN_EGL_ERROR(disp, EGL_BAD_CONTEXT, EGL_NO_IMAGE_KHR);
    /* "If <target> is EGL_LINUX_DMA_BUF_EXT, <dpy> must be a valid display,
     *  <ctx> must be EGL_NO_CONTEXT..."
-    */
+    *//*
    if (ctx != EGL_NO_CONTEXT && target == EGL_LINUX_DMA_BUF_EXT)
       RETURN_EGL_ERROR(disp, EGL_BAD_PARAMETER, EGL_NO_IMAGE_KHR);
 
@@ -1546,16 +1683,21 @@ _eglCreateImageCommon(_EGLDisplay *disp, EGLContext ctx, EGLenum target,
          disp, context, target, buffer, attr_list);
    ret = (img) ? _eglLinkImage(img) : EGL_NO_IMAGE_KHR;
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return NULL;
 }
 
 static EGLImage EGLAPIENTRY
 eglCreateImageKHR(EGLDisplay dpy, EGLContext ctx, EGLenum target,
                   EGLClientBuffer buffer, const EGLint *attr_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGL_FUNC_START(disp, EGL_OBJECT_DISPLAY_KHR, NULL, EGL_NO_IMAGE_KHR);
-   return _eglCreateImageCommon(disp, ctx, target, buffer, attr_list);
+   return _eglCreateImageCommon(disp, ctx, target, buffer, attr_list);*/
+    return NULL;
 }
 
 
@@ -1563,6 +1705,10 @@ EGLImage EGLAPIENTRY
 eglCreateImage(EGLDisplay dpy, EGLContext ctx, EGLenum target,
                EGLClientBuffer buffer, const EGLAttrib *attr_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    EGLImage image;
    EGLint *int_attribs;
@@ -1575,13 +1721,18 @@ eglCreateImage(EGLDisplay dpy, EGLContext ctx, EGLenum target,
 
    image = _eglCreateImageCommon(disp, ctx, target, buffer, int_attribs);
    free(int_attribs);
-   return image;
+   return image;*/
+    return NULL;
 }
 
 
 EGLBoolean EGLAPIENTRY
 eglDestroyImage(EGLDisplay dpy, EGLImage image)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLImage *img = _eglLookupImage(image, disp);
    _EGLDriver *drv;
@@ -1598,7 +1749,8 @@ eglDestroyImage(EGLDisplay dpy, EGLImage image)
    _eglUnlinkImage(img);
    ret = drv->API.DestroyImageKHR(drv, disp, img);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
@@ -1607,6 +1759,10 @@ _eglCreateSync(_EGLDisplay *disp, EGLenum type, const EGLAttrib *attrib_list,
                EGLBoolean orig_is_EGLAttrib,
                EGLenum invalid_type_error)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLContext *ctx = _eglGetCurrentContext();
    _EGLDriver *drv;
    _EGLSync *sync;
@@ -1623,11 +1779,11 @@ _eglCreateSync(_EGLDisplay *disp, EGLenum type, const EGLAttrib *attrib_list,
        *
        * The EGL spec provides no guidance on how to handle unsupported
        * functions. EGL_BAD_MATCH seems reasonable.
-       */
+       *//*
       RETURN_EGL_ERROR(disp, EGL_BAD_MATCH, EGL_NO_SYNC_KHR);
    }
 
-   /* return an error if the client API doesn't support GL_OES_EGL_sync */
+   /* return an error if the client API doesn't support GL_OES_EGL_sync *//*
    if (!ctx || ctx->Resource.Display != disp ||
        ctx->ClientAPI != EGL_OPENGL_ES_API)
       RETURN_EGL_ERROR(disp, EGL_BAD_MATCH, EGL_NO_SYNC_KHR);
@@ -1652,13 +1808,18 @@ _eglCreateSync(_EGLDisplay *disp, EGLenum type, const EGLAttrib *attrib_list,
    sync = drv->API.CreateSyncKHR(drv, disp, type, attrib_list);
    ret = (sync) ? _eglLinkSync(sync) : EGL_NO_SYNC_KHR;
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return NULL;
 }
 
 
 static EGLSync EGLAPIENTRY
 eglCreateSyncKHR(EGLDisplay dpy, EGLenum type, const EGLint *int_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGL_FUNC_START(disp, EGL_OBJECT_DISPLAY_KHR, NULL, EGL_FALSE);
 
@@ -1680,34 +1841,49 @@ eglCreateSyncKHR(EGLDisplay dpy, EGLenum type, const EGLint *int_list)
    if (sizeof(int_list[0]) != sizeof(attrib_list[0]))
       free(attrib_list);
 
-   /* Don't double-unlock the display. _eglCreateSync already unlocked it. */
-   return sync;
+   /* Don't double-unlock the display. _eglCreateSync already unlocked it. *//*
+   return sync;*/
+    return NULL;
 }
 
 
 static EGLSync EGLAPIENTRY
 eglCreateSync64KHR(EGLDisplay dpy, EGLenum type, const EGLAttrib *attrib_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGL_FUNC_START(disp, EGL_OBJECT_DISPLAY_KHR, NULL, EGL_FALSE);
    return _eglCreateSync(disp, type, attrib_list, EGL_TRUE,
-                         EGL_BAD_ATTRIBUTE);
+                         EGL_BAD_ATTRIBUTE);*/
+    return NULL;
 }
 
 
 EGLSync EGLAPIENTRY
 eglCreateSync(EGLDisplay dpy, EGLenum type, const EGLAttrib *attrib_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGL_FUNC_START(disp, EGL_OBJECT_DISPLAY_KHR, NULL, EGL_FALSE);
    return _eglCreateSync(disp, type, attrib_list, EGL_TRUE,
-                         EGL_BAD_PARAMETER);
+                         EGL_BAD_PARAMETER);*/
+    return NULL;
 }
 
 
 EGLBoolean EGLAPIENTRY
 eglDestroySync(EGLDisplay dpy, EGLSync sync)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSync *s = _eglLookupSync(sync, disp);
    _EGLDriver *drv;
@@ -1722,13 +1898,18 @@ eglDestroySync(EGLDisplay dpy, EGLSync sync)
    _eglUnlinkSync(s);
    ret = drv->API.DestroySyncKHR(drv, disp, s);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
 EGLint EGLAPIENTRY
 eglClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags, EGLTime timeout)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSync *s = _eglLookupSync(sync, disp);
    _EGLDriver *drv;
@@ -1747,6 +1928,7 @@ eglClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags, EGLTime timeout)
     * unlocked here to allow other threads also to be able to
     * go into waiting state.
     */
+    /*
 
    if (s->Type == EGL_SYNC_REUSABLE_KHR)
       _eglUnlockDisplay(dpy);
@@ -1757,16 +1939,22 @@ eglClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags, EGLTime timeout)
     * 'disp' is already unlocked for reusable sync type,
     * so passing 'NULL' to bypass unlocking display.
     */
+    /*
    if (s->Type == EGL_SYNC_REUSABLE_KHR)
       RETURN_EGL_EVAL(NULL, ret);
    else
-      RETURN_EGL_EVAL(disp, ret);
+      RETURN_EGL_EVAL(disp, ret);*/
+    return 0;
 }
 
 
 static EGLint
 _eglWaitSyncCommon(_EGLDisplay *disp, _EGLSync *s, EGLint flags)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLContext *ctx = _eglGetCurrentContext();
    _EGLDriver *drv;
    EGLint ret;
@@ -1774,26 +1962,32 @@ _eglWaitSyncCommon(_EGLDisplay *disp, _EGLSync *s, EGLint flags)
    _EGL_CHECK_SYNC(disp, s, EGL_FALSE, drv);
    assert(disp->Extensions.KHR_wait_sync);
 
-   /* return an error if the client API doesn't support GL_OES_EGL_sync */
+   /* return an error if the client API doesn't support GL_OES_EGL_sync *//*
    if (ctx == EGL_NO_CONTEXT || ctx->ClientAPI != EGL_OPENGL_ES_API)
       RETURN_EGL_ERROR(disp, EGL_BAD_MATCH, EGL_FALSE);
 
-   /* the API doesn't allow any flags yet */
+   /* the API doesn't allow any flags yet *//*
    if (flags != 0)
       RETURN_EGL_ERROR(disp, EGL_BAD_PARAMETER, EGL_FALSE);
 
    ret = drv->API.WaitSyncKHR(drv, disp, s);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return 0;
 }
 
 static EGLint EGLAPIENTRY
 eglWaitSyncKHR(EGLDisplay dpy, EGLSync sync, EGLint flags)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSync *s = _eglLookupSync(sync, disp);
    _EGL_FUNC_START(disp, EGL_OBJECT_SYNC_KHR, s, EGL_FALSE);
-   return _eglWaitSyncCommon(disp, s, flags);
+   return _eglWaitSyncCommon(disp, s, flags);*/
+    return 0;
 }
 
 
@@ -1804,16 +1998,25 @@ eglWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
     * EGLBoolean. In both cases, the return values can only be EGL_FALSE and
     * EGL_TRUE.
     */
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSync *s = _eglLookupSync(sync, disp);
    _EGL_FUNC_START(disp, EGL_OBJECT_SYNC_KHR, s, EGL_FALSE);
-   return _eglWaitSyncCommon(disp, s, flags);
+   return _eglWaitSyncCommon(disp, s, flags);*/
+    return EGL_FALSE;
 }
 
 
 static EGLBoolean EGLAPIENTRY
 eglSignalSyncKHR(EGLDisplay dpy, EGLSync sync, EGLenum mode)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSync *s = _eglLookupSync(sync, disp);
    _EGLDriver *drv;
@@ -1825,13 +2028,18 @@ eglSignalSyncKHR(EGLDisplay dpy, EGLSync sync, EGLenum mode)
    assert(disp->Extensions.KHR_reusable_sync);
    ret = drv->API.SignalSyncKHR(drv, disp, s, mode);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
 static EGLBoolean
 _eglGetSyncAttribCommon(_EGLDisplay *disp, _EGLSync *s, EGLint attribute, EGLAttrib *value)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDriver *drv;
    EGLBoolean ret;
 
@@ -1840,22 +2048,32 @@ _eglGetSyncAttribCommon(_EGLDisplay *disp, _EGLSync *s, EGLint attribute, EGLAtt
           disp->Extensions.KHR_fence_sync);
    ret = drv->API.GetSyncAttrib(drv, disp, s, attribute, value);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 EGLBoolean EGLAPIENTRY
 eglGetSyncAttrib(EGLDisplay dpy, EGLSync sync, EGLint attribute, EGLAttrib *value)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSync *s = _eglLookupSync(sync, disp);
    _EGL_FUNC_START(disp, EGL_OBJECT_SYNC_KHR, s, EGL_FALSE);
-   return _eglGetSyncAttribCommon(disp, s, attribute, value);
+   return _eglGetSyncAttribCommon(disp, s, attribute, value);*/
+    return EGL_FALSE;
 }
 
 
 static EGLBoolean EGLAPIENTRY
 eglGetSyncAttribKHR(EGLDisplay dpy, EGLSync sync, EGLint attribute, EGLint *value)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSync *s = _eglLookupSync(sync, disp);
    EGLAttrib attrib;
@@ -1872,12 +2090,13 @@ eglGetSyncAttribKHR(EGLDisplay dpy, EGLSync sync, EGLint attribute, EGLint *valu
    /* The EGL_KHR_fence_sync spec says this about eglGetSyncAttribKHR:
     *
     *    If any error occurs, <*value> is not modified.
-    */
+    *//*
    if (result == EGL_FALSE)
       return result;
 
    *value = attrib;
-   return result;
+   return result;*/
+    return EGL_FALSE;
 }
 
 
@@ -1885,6 +2104,10 @@ static EGLBoolean EGLAPIENTRY
 eglSwapBuffersRegionNOK(EGLDisplay dpy, EGLSurface surface,
 			EGLint numRects, const EGLint *rects)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLContext *ctx = _eglGetCurrentContext();
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSurface *surf = _eglLookupSurface(surface, disp);
@@ -1899,19 +2122,25 @@ eglSwapBuffersRegionNOK(EGLDisplay dpy, EGLSurface surface,
       RETURN_EGL_EVAL(disp, EGL_FALSE);
 
    /* surface must be bound to current context in EGL 1.4 */
+    /*
    if (_eglGetContextHandle(ctx) == EGL_NO_CONTEXT ||
        surf != ctx->DrawSurface)
       RETURN_EGL_ERROR(disp, EGL_BAD_SURFACE, EGL_FALSE);
 
    ret = drv->API.SwapBuffersRegionNOK(drv, disp, surf, numRects, rects);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
 static EGLImage EGLAPIENTRY
 eglCreateDRMImageMESA(EGLDisplay dpy, const EGLint *attr_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLDriver *drv;
    _EGLImage *img;
@@ -1926,13 +2155,18 @@ eglCreateDRMImageMESA(EGLDisplay dpy, const EGLint *attr_list)
    img = drv->API.CreateDRMImageMESA(drv, disp, attr_list);
    ret = (img) ? _eglLinkImage(img) : EGL_NO_IMAGE_KHR;
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 static EGLBoolean EGLAPIENTRY
 eglExportDRMImageMESA(EGLDisplay dpy, EGLImage image,
 		      EGLint *name, EGLint *handle, EGLint *stride)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLImage *img = _eglLookupImage(image, disp);
    _EGLDriver *drv;
@@ -1948,7 +2182,8 @@ eglExportDRMImageMESA(EGLDisplay dpy, EGLImage image,
 
    ret = drv->API.ExportDRMImageMESA(drv, disp, img, name, handle, stride);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
@@ -1957,6 +2192,10 @@ struct wl_display;
 static EGLBoolean EGLAPIENTRY
 eglBindWaylandDisplayWL(EGLDisplay dpy, struct wl_display *display)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLDriver *drv;
    EGLBoolean ret;
@@ -1971,12 +2210,17 @@ eglBindWaylandDisplayWL(EGLDisplay dpy, struct wl_display *display)
 
    ret = drv->API.BindWaylandDisplayWL(drv, disp, display);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 static EGLBoolean EGLAPIENTRY
 eglUnbindWaylandDisplayWL(EGLDisplay dpy, struct wl_display *display)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLDriver *drv;
    EGLBoolean ret;
@@ -1991,13 +2235,18 @@ eglUnbindWaylandDisplayWL(EGLDisplay dpy, struct wl_display *display)
 
    ret = drv->API.UnbindWaylandDisplayWL(drv, disp, display);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 static EGLBoolean EGLAPIENTRY
 eglQueryWaylandBufferWL(EGLDisplay dpy, struct wl_resource *buffer,
                         EGLint attribute, EGLint *value)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLDriver *drv;
    EGLBoolean ret;
@@ -2012,13 +2261,18 @@ eglQueryWaylandBufferWL(EGLDisplay dpy, struct wl_resource *buffer,
 
    ret = drv->API.QueryWaylandBufferWL(drv, disp, buffer, attribute, value);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 
 static struct wl_buffer * EGLAPIENTRY
 eglCreateWaylandBufferFromImageWL(EGLDisplay dpy, EGLImage image)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLImage *img;
    _EGLDriver *drv;
@@ -2036,13 +2290,18 @@ eglCreateWaylandBufferFromImageWL(EGLDisplay dpy, EGLImage image)
 
    ret = drv->API.CreateWaylandBufferFromImageWL(drv, disp, img);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 static EGLBoolean EGLAPIENTRY
 eglPostSubBufferNV(EGLDisplay dpy, EGLSurface surface,
                    EGLint x, EGLint y, EGLint width, EGLint height)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLSurface *surf = _eglLookupSurface(surface, disp);
    _EGLDriver *drv;
@@ -2057,7 +2316,8 @@ eglPostSubBufferNV(EGLDisplay dpy, EGLSurface surface,
 
    ret = drv->API.PostSubBufferNV(drv, disp, surf, x, y, width, height);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 static EGLBoolean EGLAPIENTRY
@@ -2065,6 +2325,10 @@ eglGetSyncValuesCHROMIUM(EGLDisplay display, EGLSurface surface,
                          EGLuint64KHR *ust, EGLuint64KHR *msc,
                          EGLuint64KHR *sbc)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    /*
    _EGLDisplay *disp = _eglLockDisplay(display);
    _EGLSurface *surf = _eglLookupSurface(surface, disp);
    _EGLDriver *drv;
@@ -2081,7 +2345,8 @@ eglGetSyncValuesCHROMIUM(EGLDisplay display, EGLSurface surface,
 
    ret = drv->API.GetSyncValuesCHROMIUM(disp, surf, ust, msc, sbc);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 static EGLBoolean EGLAPIENTRY
@@ -2089,6 +2354,10 @@ eglExportDMABUFImageQueryMESA(EGLDisplay dpy, EGLImage image,
                               EGLint *fourcc, EGLint *nplanes,
                               EGLuint64KHR *modifiers)
 {
+   ///never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLImage *img = _eglLookupImage(image, disp);
    _EGLDriver *drv;
@@ -2105,13 +2374,18 @@ eglExportDMABUFImageQueryMESA(EGLDisplay dpy, EGLImage image,
    ret = drv->API.ExportDMABUFImageQueryMESA(drv, disp, img, fourcc, nplanes,
                                              modifiers);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+    return EGL_FALSE;
 }
 
 static EGLBoolean EGLAPIENTRY
 eglExportDMABUFImageMESA(EGLDisplay dpy, EGLImage image,
                          int *fds, EGLint *strides, EGLint *offsets)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   /*
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLImage *img = _eglLookupImage(image, disp);
    _EGLDriver *drv;
@@ -2127,13 +2401,18 @@ eglExportDMABUFImageMESA(EGLDisplay dpy, EGLImage image,
 
    ret = drv->API.ExportDMABUFImageMESA(drv, disp, img, fds, strides, offsets);
 
-   RETURN_EGL_EVAL(disp, ret);
+   RETURN_EGL_EVAL(disp, ret);*/
+   return EGL_FALSE;
 }
 
 static EGLint EGLAPIENTRY
 eglLabelObjectKHR(EGLDisplay dpy, EGLenum objectType, EGLObjectKHR object,
 		  EGLLabelKHR label)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   /*
    _EGLDisplay *disp = NULL;
    _EGLResourceType type;
 
@@ -2188,19 +2467,31 @@ eglLabelObjectKHR(EGLDisplay dpy, EGLenum objectType, EGLObjectKHR object,
    }
 
    RETURN_EGL_ERROR(disp, EGL_BAD_PARAMETER, EGL_BAD_PARAMETER);
+    */
+   return 0;
 }
 
 static EGLBoolean
 validDebugMessageLevel(EGLAttrib level)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   /*
    return (level >= EGL_DEBUG_MSG_CRITICAL_KHR &&
            level <= EGL_DEBUG_MSG_INFO_KHR);
+           */
+    return EGL_FALSE;
 }
 
 static EGLint EGLAPIENTRY
 eglDebugMessageControlKHR(EGLDEBUGPROCKHR callback,
 			  const EGLAttrib *attrib_list)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   /*
    unsigned int newEnabled;
 
    _EGL_FUNC_START(NULL, EGL_NONE, NULL, EGL_BAD_ALLOC);
@@ -2238,12 +2529,17 @@ eglDebugMessageControlKHR(EGLDEBUGPROCKHR callback,
    }
 
    mtx_unlock(_eglGlobal.Mutex);
-   return EGL_SUCCESS;
+   return EGL_SUCCESS;*/
+   return 0;
 }
 
 static EGLBoolean EGLAPIENTRY
 eglQueryDebugKHR(EGLint attribute, EGLAttrib *value)
 {
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   /*
    _EGL_FUNC_START(NULL, EGL_NONE, NULL, EGL_BAD_ALLOC);
 
    mtx_lock(_eglGlobal.Mutex);
@@ -2270,11 +2566,17 @@ eglQueryDebugKHR(EGLint attribute, EGLAttrib *value)
 
    mtx_unlock(_eglGlobal.Mutex);
    return EGL_TRUE;
+    */
+   return EGL_FALSE;
 }
 
 __eglMustCastToProperFunctionPointerType EGLAPIENTRY
 eglGetProcAddress(const char *procname)
 {
+    //used by shader
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: unsupported method : %s\n",__func__);
+
    static const struct {
       const char *name;
       _EGLProc function;
@@ -2359,6 +2661,7 @@ eglGetProcAddress(const char *procname)
    };
    EGLint i;
    _EGLProc ret;
+   _eglLog(_EGL_INFO,"Get Process Address by name : %s",procname);
 
    if (!procname)
       RETURN_EGL_SUCCESS(NULL, NULL);
@@ -2367,6 +2670,7 @@ eglGetProcAddress(const char *procname)
 
    ret = NULL;
    if (strncmp(procname, "egl", 3) == 0) {
+       //egl函数
       for (i = 0; egl_functions[i].name; i++) {
          if (strcmp(egl_functions[i].name, procname) == 0) {
             ret = egl_functions[i].function;
@@ -2374,17 +2678,18 @@ eglGetProcAddress(const char *procname)
          }
       }
    }
-   if (!ret)
+   if (!ret)//如果没有就搜索gl函数
       ret = _eglGetDriverProc(procname);
 
    RETURN_EGL_SUCCESS(NULL, ret);
+ //  return NULL;
 }
 
 static int
 _eglLockDisplayInterop(EGLDisplay dpy, EGLContext context,
                        _EGLDisplay **disp, _EGLDriver **drv,
                        _EGLContext **ctx)
-{
+{/*
 
    *disp = _eglLockDisplay(dpy);
    if (!*disp || !(*disp)->Initialized || !(*disp)->Driver) {
@@ -2403,13 +2708,17 @@ _eglLockDisplayInterop(EGLDisplay dpy, EGLContext context,
       return MESA_GLINTEROP_INVALID_CONTEXT;
    }
 
-   return MESA_GLINTEROP_SUCCESS;
+   return MESA_GLINTEROP_SUCCESS;*/
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   return 0;
 }
 
 PUBLIC int
 MesaGLInteropEGLQueryDeviceInfo(EGLDisplay dpy, EGLContext context,
                                 struct mesa_glinterop_device_info *out)
-{
+{/*
    _EGLDisplay *disp;
    _EGLDriver *drv;
    _EGLContext *ctx;
@@ -2425,14 +2734,18 @@ MesaGLInteropEGLQueryDeviceInfo(EGLDisplay dpy, EGLContext context,
       ret = MESA_GLINTEROP_UNSUPPORTED;
 
    _eglUnlockDisplay(disp);
-   return ret;
+   return ret;*/
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   return 0;
 }
 
 PUBLIC int
 MesaGLInteropEGLExportObject(EGLDisplay dpy, EGLContext context,
                              struct mesa_glinterop_export_in *in,
                              struct mesa_glinterop_export_out *out)
-{
+{/*
    _EGLDisplay *disp;
    _EGLDriver *drv;
    _EGLContext *ctx;
@@ -2448,5 +2761,9 @@ MesaGLInteropEGLExportObject(EGLDisplay dpy, EGLContext context,
       ret = MESA_GLINTEROP_UNSUPPORTED;
 
    _eglUnlockDisplay(disp);
-   return ret;
+   return ret;*/
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   return 0;
 }

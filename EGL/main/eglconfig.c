@@ -395,6 +395,7 @@ _eglValidateConfig(const _EGLConfig *conf, EGLBoolean for_matching)
       if (conf->LuminanceSize + conf->AlphaSize != conf->BufferSize)
          valid = EGL_FALSE;
       break;
+      default:_eglLog(_EGL_WARNING,"Unknown ColorBufferType : %d",conf->ColorBufferType);
    }
    if (!valid) {
       _eglLog(_EGL_DEBUG, "conflicting color buffer type and channel sizes");

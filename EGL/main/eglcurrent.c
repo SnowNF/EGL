@@ -326,7 +326,7 @@ _eglDebugReportFullv(EGLenum error, const char *command, const char *funcName,
 
       //by hand
       int vasprintf (char **__restrict __ptr, const char *__restrict __f,
-                  _G_va_list __arg);
+                  va_list __arg);
 
 
       if (message != NULL) {

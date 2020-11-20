@@ -490,6 +490,7 @@ EGLBoolean
 _eglBindTexImage(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surface,
                  EGLint buffer)
 {
+   exit(0);
    EGLint texture_type = EGL_PBUFFER_BIT;
 
    /* Just do basic error checking and return success/fail.
