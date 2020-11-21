@@ -138,11 +138,13 @@ swrastPutImage(__DRIdrawable * draw, int op,
    xcb_gcontext_t gc;
 
    switch (op) {
-   case __DRI_SWRAST_IMAGE_OP_DRAW:
+   case __DRI_SWRAST_IMAGE_OP_DRAW: // 1
+      // not used
       gc = dri2_surf->gc;
       break;
-   case __DRI_SWRAST_IMAGE_OP_SWAP:
+   case __DRI_SWRAST_IMAGE_OP_SWAP: // 3
       gc = dri2_surf->swapgc;
+      //used
       break;
    default:
       return;
@@ -189,6 +191,7 @@ swrastGetImage(__DRIdrawable * read,
 static xcb_screen_t *
 get_xcb_screen(xcb_screen_iterator_t iter, int screen)
 {
+   //used
     for (; iter.rem; --screen, xcb_screen_next(&iter))
         if (screen == 0)
             return iter.data;
@@ -258,7 +261,7 @@ dri2_x11_create_surface(_EGLDriver *drv, _EGLDisplay *disp, EGLint type,
    config = dri2_get_dri_config(dri2_conf, type,
                                 dri2_surf->base.GLColorspace);
 
-   if (dri2_dpy->dri2) {
+ /*  if (dri2_dpy->dri2) {
       dri2_surf->dri_drawable =
 	 (*dri2_dpy->dri2->createNewDrawable)(dri2_dpy->dri_screen, config,
 					      dri2_surf);
@@ -267,7 +270,10 @@ dri2_x11_create_surface(_EGLDriver *drv, _EGLDisplay *disp, EGLint type,
       dri2_surf->dri_drawable = 
          (*dri2_dpy->swrast->createNewDrawable)(dri2_dpy->dri_screen, config,
                                                 dri2_surf);
-   }
+   }*/
+   dri2_surf->dri_drawable =
+           (*dri2_dpy->swrast->createNewDrawable)(dri2_dpy->dri_screen, config,
+                                                  dri2_surf);
 
    if (dri2_surf->dri_drawable == NULL) {
       _eglError(EGL_BAD_ALLOC, "dri2->createNewDrawable");
@@ -297,7 +303,7 @@ dri2_x11_create_surface(_EGLDriver *drv, _EGLDisplay *disp, EGLint type,
       free(reply);
    }
 
-   if (dri2_dpy->dri2) {
+  /* if (dri2_dpy->dri2) {
       xcb_void_cookie_t cookie;
       int conn_error;
 
@@ -322,7 +328,11 @@ dri2_x11_create_surface(_EGLDriver *drv, _EGLDisplay *disp, EGLint type,
          dri2_surf->depth = _eglGetConfigKey(conf, EGL_BUFFER_SIZE);
       }
       swrastCreateDrawable(dri2_dpy, dri2_surf);
+   }*/
+   if (type == EGL_PBUFFER_BIT) {
+      dri2_surf->depth = _eglGetConfigKey(conf, EGL_BUFFER_SIZE);
    }
+   swrastCreateDrawable(dri2_dpy, dri2_surf);
 
    /* we always copy the back buffer to front */
    dri2_surf->base.PostSubBufferSupportedNV = EGL_TRUE;
@@ -557,7 +567,7 @@ dri2_x11_flush_front_buffer(__DRIdrawable * driDrawable, void *loaderPrivate)
 
 static int
 dri2_x11_do_authenticate(struct dri2_egl_display *dri2_dpy, uint32_t id)
-{//never used
+{   //never used
     //FIXME: need more test.
     fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    xcb_dri2_authenticate_reply_t *authenticate;
@@ -1203,11 +1213,11 @@ static struct dri2_egl_display_vtbl dri2_x11_swrast_display_vtbl = {
    .destroy_surface = dri2_x11_destroy_surface,
    .create_image = dri2_fallback_create_image_khr,
    .swap_interval = dri2_fallback_swap_interval,
-   .swap_buffers = dri2_x11_swap_buffers,
-   .swap_buffers_region = dri2_fallback_swap_buffers_region,
-   .post_sub_buffer = dri2_fallback_post_sub_buffer,
+   .swap_buffers = dri2_x11_swap_buffers, //used
+   .swap_buffers_region = dri2_fallback_swap_buffers_region, //never used
+   .post_sub_buffer = dri2_fallback_post_sub_buffer, //never used
    .copy_buffers = dri2_x11_copy_buffers,
-   .query_buffer_age = dri2_fallback_query_buffer_age,
+   .query_buffer_age = dri2_fallback_query_buffer_age, //never used
    .create_wayland_buffer_from_image = dri2_fallback_create_wayland_buffer_from_image,//never used
    .get_sync_values = dri2_fallback_get_sync_values,
    .get_dri_drawable = dri2_surface_get_dri_drawable,

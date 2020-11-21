@@ -37,6 +37,7 @@
 #include "egltypedefs.h"
 #include "egldefines.h"
 #include "eglarray.h"
+#include "../EGL_config.h"
 
 
 #ifdef __cplusplus

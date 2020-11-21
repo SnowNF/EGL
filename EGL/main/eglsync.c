@@ -28,6 +28,7 @@
 
 #include <inttypes.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "eglsync.h"
 #include "eglcurrent.h"
@@ -41,6 +42,9 @@
 static EGLint
 _eglParseSyncAttribList(_EGLSync *sync, const EGLAttrib *attrib_list)
 {
+   //never used
+   //FIXME: need more test.
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    EGLint i;
 
    if (!attrib_list)
@@ -57,7 +61,7 @@ _eglParseSyncAttribList(_EGLSync *sync, const EGLAttrib *attrib_list)
             sync->CLEvent = val;
             break;
          }
-         /* fall through */
+         /* fall through *//*
       default:
          (void) val;
          err = EGL_BAD_ATTRIBUTE;
@@ -70,7 +74,8 @@ _eglParseSyncAttribList(_EGLSync *sync, const EGLAttrib *attrib_list)
       }
    }
 
-   return EGL_SUCCESS;
+   return EGL_SUCCESS;*/
+   return 0;
 }
 
 
@@ -78,6 +83,9 @@ EGLBoolean
 _eglInitSync(_EGLSync *sync, _EGLDisplay *dpy, EGLenum type,
              const EGLAttrib *attrib_list)
 {
+   //never used
+   //FIXME: need more test.
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    EGLint err;
 
    _eglInitResource(&sync->Resource, sizeof(*sync), dpy);
@@ -99,7 +107,8 @@ _eglInitSync(_EGLSync *sync, _EGLDisplay *dpy, EGLenum type,
    if (type == EGL_SYNC_CL_EVENT_KHR && !sync->CLEvent)
       return _eglError(EGL_BAD_ATTRIBUTE, "eglCreateSyncKHR");
 
-   return EGL_TRUE;
+   return EGL_TRUE;*/
+   return EGL_FALSE;
 }
 
 
@@ -107,12 +116,15 @@ EGLBoolean
 _eglGetSyncAttrib(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync,
                   EGLint attribute, EGLAttrib *value)
 {
+   //never used
+   //FIXME: need more test.
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    switch (attribute) {
    case EGL_SYNC_TYPE_KHR:
       *value = sync->Type;
       break;
    case EGL_SYNC_STATUS_KHR:
-      /* update the sync status */
+      /* update the sync status *//*
       if (sync->SyncStatus != EGL_SIGNALED_KHR &&
           (sync->Type == EGL_SYNC_FENCE_KHR ||
            sync->Type == EGL_SYNC_CL_EVENT_KHR ||
@@ -132,5 +144,6 @@ _eglGetSyncAttrib(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync,
       break;
    }
 
-   return EGL_TRUE;
+   return EGL_TRUE;*/
+   return EGL_FALSE;
 }

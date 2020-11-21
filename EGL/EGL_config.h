@@ -7,6 +7,10 @@
 //定义我自己的debug宏
 #define MY_DEBUG
 
+#define _EGL_NATIVE_PLATFORM _EGL_PLATFORM_X11
+#define HAVE_X11_PLATFORM
+#define _EGL_BUILT_IN_DRIVER_DRI2
+
 //指定默认dri驱动搜索目录
 #define DEFAULT_DRIVER_DIR "/usr/local/lib/dri"
 

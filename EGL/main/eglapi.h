@@ -52,33 +52,33 @@ struct mesa_glinterop_export_out;
 struct _egl_api
 {
    /* driver funcs */
-   //egl_dri2.c : dri2_initialize
+   //egl_dri2.c : dri2_initialize //used
    EGLBoolean (*Initialize)(_EGLDriver *, _EGLDisplay *dpy);
-   //egl_dri2.c : dri2_terminate
+   //egl_dri2.c : dri2_terminate //used
    EGLBoolean (*Terminate)(_EGLDriver *, _EGLDisplay *dpy);
 
    /* config funcs */
-   //eglconfig.c : _eglGetConfigs
+   //eglconfig.c : _eglGetConfigs //never used
    EGLBoolean (*GetConfigs)(_EGLDriver *drv, _EGLDisplay *dpy,
                             EGLConfig *configs, EGLint config_size,
                             EGLint *num_config);
 
-   //eglconfig.c : _eglChooseConfig
+   //eglconfig.c : _eglChooseConfig //used
    EGLBoolean (*ChooseConfig)(_EGLDriver *drv, _EGLDisplay *dpy,
                               const EGLint *attrib_list, EGLConfig *configs,
                               EGLint config_size, EGLint *num_config);
 
-   //eglconfig.c : _eglGetConfigs
+   //eglconfig.c : _eglGetConfigs //used
    EGLBoolean (*GetConfigAttrib)(_EGLDriver *drv, _EGLDisplay *dpy,
                                  _EGLConfig *config, EGLint attribute,
                                  EGLint *value);
 
    /* context funcs */
-   //egl_dri2.c : dri2_create_context
+   //egl_dri2.c : dri2_create_context //used
    _EGLContext *(*CreateContext)(_EGLDriver *drv, _EGLDisplay *dpy,
                                  _EGLConfig *config, _EGLContext *share_list,
                                  const EGLint *attrib_list);
-   //egl_dri2.c : dri2_destroy_context
+   //egl_dri2.c : dri2_destroy_context //used
    EGLBoolean (*DestroyContext)(_EGLDriver *drv, _EGLDisplay *dpy,
                                 _EGLContext *ctx);
 
@@ -86,11 +86,11 @@ struct _egl_api
    /* this is the only function (other than Initialize) that may be called
     * with an uninitialized display
     */
-   //egl_dri2.c : dri2_make_current
+   //egl_dri2.c : dri2_make_current //used
    EGLBoolean (*MakeCurrent)(_EGLDriver *drv, _EGLDisplay *dpy,
                              _EGLSurface *draw, _EGLSurface *read,
                              _EGLContext *ctx);
-   //eglcontext.c : _eglQueryContext
+   //eglcontext.c : _eglQueryContext //never used
    EGLBoolean (*QueryContext)(_EGLDriver *drv, _EGLDisplay *dpy,
                               _EGLContext *ctx, EGLint attribute,
                               EGLint *value);
@@ -108,39 +108,39 @@ struct _egl_api
    _EGLSurface *(*CreatePbufferSurface)(_EGLDriver *drv, _EGLDisplay *dpy,
                                         _EGLConfig *config,
                                         const EGLint *attrib_list);
-    //egl_dri2.c : dri2_destroy_surface
+    //egl_dri2.c : dri2_destroy_surface //used
    EGLBoolean (*DestroySurface)(_EGLDriver *drv, _EGLDisplay *dpy,
                                 _EGLSurface *surface);
-    //egl_dri2.c : dri2_query_surface
+    //egl_dri2.c : dri2_query_surface //never used
    EGLBoolean (*QuerySurface)(_EGLDriver *drv, _EGLDisplay *dpy,
                               _EGLSurface *surface, EGLint attribute,
                               EGLint *value);
-    //eglsurface.c : _eglSurfaceAttrib
+    //eglsurface.c : _eglSurfaceAttrib //never used
    EGLBoolean (*SurfaceAttrib)(_EGLDriver *drv, _EGLDisplay *dpy,
                                _EGLSurface *surface, EGLint attribute,
                                EGLint value);
 
-   //egl_dri2.c : dri2_bind_tex_image
+   //egl_dri2.c : dri2_bind_tex_image //never used
    EGLBoolean (*BindTexImage)(_EGLDriver *drv, _EGLDisplay *dpy,
                               _EGLSurface *surface, EGLint buffer);
-   //egl_dri2.c : dri2_release_tex_image
+   //egl_dri2.c : dri2_release_tex_image //never used
    EGLBoolean (*ReleaseTexImage)(_EGLDriver *drv, _EGLDisplay *dpy,
                                  _EGLSurface *surface, EGLint buffer);
-   //egl_dri2.c : dri2_swap_interval
+   //egl_dri2.c : dri2_swap_interval //used
    EGLBoolean (*SwapInterval)(_EGLDriver *drv, _EGLDisplay *dpy,
                               _EGLSurface *surf, EGLint interval);
-   //egl_dri2.c : dri2_swap_buffers
+   //egl_dri2.c : dri2_swap_buffers //used
    EGLBoolean (*SwapBuffers)(_EGLDriver *drv, _EGLDisplay *dpy,
                              _EGLSurface *draw);
-   //egl_dri2.c : dri2_copy_buffers
+   //egl_dri2.c : dri2_copy_buffers //never used
    EGLBoolean (*CopyBuffers)(_EGLDriver *drv, _EGLDisplay *dpy,
                              _EGLSurface *surface, void *native_pixmap_target);
 
    /* misc functions */
-    //egl_dri2.c : dri2_wait_client
+    //egl_dri2.c : dri2_wait_client //never used
    EGLBoolean (*WaitClient)(_EGLDriver *drv, _EGLDisplay *dpy,
                             _EGLContext *ctx);
-    //egl_dri2.c : dri2_wait_native
+    //egl_dri2.c : dri2_wait_native //never used
    EGLBoolean (*WaitNative)(_EGLDriver *drv, _EGLDisplay *dpy,
                             EGLint engine);
 
@@ -148,7 +148,7 @@ struct _egl_api
     //egl_dri2.c : dri2_get_proc_address
    _EGLProc (*GetProcAddress)(_EGLDriver *drv, const char *procname);
 
-    //eglfallbacks.c : _eglReturnFalse
+    //eglfallbacks.c : _eglReturnFalse //never used
    _EGLSurface *(*CreatePbufferFromClientBuffer)(_EGLDriver *drv,
                                                  _EGLDisplay *dpy,
                                                  EGLenum buftype,
@@ -156,35 +156,35 @@ struct _egl_api
                                                  _EGLConfig *config,
                                                  const EGLint *attrib_list);
 
-    //egl_dri2.c : dri2_create_image
+    //egl_dri2.c : dri2_create_image //never used
    _EGLImage *(*CreateImageKHR)(_EGLDriver *drv, _EGLDisplay *dpy,
                                 _EGLContext *ctx, EGLenum target,
                                 EGLClientBuffer buffer,
                                 const EGLint *attr_list);
-    //egl_dri2.c : dri2_destroy_image_khr
+    //egl_dri2.c : dri2_destroy_image_khr //never used
    EGLBoolean (*DestroyImageKHR)(_EGLDriver *drv, _EGLDisplay *dpy,
                                  _EGLImage *image);
 
-    //egl_dri2.c : dri2_create_sync
+    //egl_dri2.c : dri2_create_sync //never used
    _EGLSync *(*CreateSyncKHR)(_EGLDriver *drv, _EGLDisplay *dpy, EGLenum type,
                               const EGLAttrib *attrib_list);
-    //egl_dri2.c : dri2_destroy_sync
+    //egl_dri2.c : dri2_destroy_sync //never used
    EGLBoolean (*DestroySyncKHR)(_EGLDriver *drv, _EGLDisplay *dpy,
                                 _EGLSync *sync);
-    //egl_dri2.c : dri2_client_wait_sync
+    //egl_dri2.c : dri2_client_wait_sync //never used
    EGLint (*ClientWaitSyncKHR)(_EGLDriver *drv, _EGLDisplay *dpy,
                                _EGLSync *sync, EGLint flags, EGLTime timeout);
-    //egl_dri2.c : dri2_server_wait_sync
+    //egl_dri2.c : dri2_server_wait_sync //never used
    EGLint (*WaitSyncKHR)(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync);
 
-    //egl_dri2.c : dri2_signal_sync
+    //egl_dri2.c : dri2_signal_sync  //never used
    EGLBoolean (*SignalSyncKHR)(_EGLDriver *drv, _EGLDisplay *dpy,
                                _EGLSync *sync, EGLenum mode);
-    //eglsync.c : _eglGetSyncAttrib
+    //eglsync.c : _eglGetSyncAttrib //never used
    EGLBoolean (*GetSyncAttrib)(_EGLDriver *drv, _EGLDisplay *dpy,
                                _EGLSync *sync, EGLint attribute,
                                EGLAttrib *value);
-    //egl_dri2.c : dri2_swap_buffers_region
+    //egl_dri2.c : dri2_swap_buffers_region //never used
    EGLBoolean (*SwapBuffersRegionNOK)(_EGLDriver *drv, _EGLDisplay *disp,
                                       _EGLSurface *surf, EGLint numRects,
                                       const EGLint *rects);
@@ -206,25 +206,25 @@ struct _egl_api
                                       struct wl_resource *buffer,
                                       EGLint attribute, EGLint *value);
 
-    //egl_dri2.c : dri2_create_wayland_buffer_from_image
+    //egl_dri2.c : dri2_create_wayland_buffer_from_image //never used
    struct wl_buffer *(*CreateWaylandBufferFromImageWL)(_EGLDriver *drv,
                                                        _EGLDisplay *disp,
                                                        _EGLImage *img);
 
-    //egl_dri2.c : dri2_swap_buffers_with_damage
+    //egl_dri2.c : dri2_swap_buffers_with_damage //never used
    EGLBoolean (*SwapBuffersWithDamageEXT)(_EGLDriver *drv, _EGLDisplay *dpy,
                                           _EGLSurface *surface,
                                           const EGLint *rects, EGLint n_rects);
 
-    //egl_dri2.c : dri2_post_sub_buffer
+    //egl_dri2.c : dri2_post_sub_buffer //never used
    EGLBoolean (*PostSubBufferNV)(_EGLDriver *drv, _EGLDisplay *disp,
                                  _EGLSurface *surface, EGLint x, EGLint y,
                                  EGLint width, EGLint height);
 
-    //egl_dri2.c : dri2_query_buffer_age
+    //egl_dri2.c : dri2_query_buffer_age //never used
    EGLint (*QueryBufferAge)(_EGLDriver *drv,
                             _EGLDisplay *dpy, _EGLSurface *surface);
-    //egl_dri2.c : dri2_get_sync_values_chromium
+    //egl_dri2.c : dri2_get_sync_values_chromium //never used
    EGLBoolean (*GetSyncValuesCHROMIUM)(_EGLDisplay *dpy, _EGLSurface *surface,
                                        EGLuint64KHR *ust, EGLuint64KHR *msc,
                                        EGLuint64KHR *sbc);
@@ -239,15 +239,16 @@ struct _egl_api
                                        _EGLImage *img, EGLint *fds,
                                        EGLint *strides, EGLint *offsets);
 
-    //egl_dri2.c : dri2_interop_query_device_info
+    //egl_dri2.c : dri2_interop_query_device_info //never used
    int (*GLInteropQueryDeviceInfo)(_EGLDisplay *dpy, _EGLContext *ctx,
                                    struct mesa_glinterop_device_info *out);
-    //egl_dri2.c : dri2_interop_export_object
+    //egl_dri2.c : dri2_interop_export_object //never used
    int (*GLInteropExportObject)(_EGLDisplay *dpy, _EGLContext *ctx,
                                 struct mesa_glinterop_export_in *in,
                                 struct mesa_glinterop_export_out *out);
 };
 
+            //never used
 EGLint _eglConvertIntsToAttribs(const EGLint *int_list,
                                 EGLAttrib **out_attrib_list);
 

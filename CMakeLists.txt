@@ -12,10 +12,10 @@ include_directories(EGL/include/
 #set(CMAKE_C_FLAGS "-pthread -lxcb -lxcb-dri2 -ldl -lxcb-xfixes -lX11-xcb")
 
 
-add_definitions(-DHAVE_X11_PLATFORM)
+#add_definitions(-DHAVE_X11_PLATFORM)
 #add_definitions(-DHAVE_SURFACELESS_PLATFORM)
-add_definitions(-D_EGL_BUILT_IN_DRIVER_DRI2)
-add_definitions(-D_EGL_NATIVE_PLATFORM=_EGL_PLATFORM_X11)   #used for egldisplay.c (_eglGetNativePlatform)
+#add_definitions(-D_EGL_BUILT_IN_DRIVER_DRI2)
+#add_definitions(-D_EGL_NATIVE_PLATFORM=_EGL_PLATFORM_X11)   #used for egldisplay.c (_eglGetNativePlatform)
 #add_definitions(-DHAVE_DRI3)
 
 add_library(EGL SHARED

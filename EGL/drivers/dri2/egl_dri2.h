@@ -29,6 +29,7 @@
 #define EGL_DRI2_INCLUDED
 
 #include <stdint.h>
+#include "../../EGL_config.h"
 
 #ifdef HAVE_X11_PLATFORM
 #include <xcb/xcb.h>
@@ -79,6 +80,7 @@
 #include "eglsurface.h"
 #include "eglimage.h"
 #include "eglsync.h"
+#include "../../EGL_config.h"
 
 struct wl_buffer;
 

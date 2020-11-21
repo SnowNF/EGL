@@ -47,7 +47,6 @@
 #include "egllog.h"
 #include "eglimage.h"
 #include "eglsync.h"
-#include "../EGL_config.h"
 
 /* Includes for _eglNativePlatformDetectNativeDisplay */
 #ifdef HAVE_MINCORE
@@ -298,7 +297,7 @@ _eglReleaseDisplayResources(_EGLDriver *drv, _EGLDisplay *display)
       list = list->Next;
 
       _eglUnlinkContext(ctx);
-      drv->API.DestroyContext(drv, display, ctx);
+      drv->API.DestroyContext(drv, display, ctx);//used
    }
    assert(!display->ResourceLists[_EGL_RESOURCE_CONTEXT]);
 
@@ -308,17 +307,19 @@ _eglReleaseDisplayResources(_EGLDriver *drv, _EGLDisplay *display)
       list = list->Next;
 
       _eglUnlinkSurface(surf);
-      drv->API.DestroySurface(drv, display, surf);
+      drv->API.DestroySurface(drv, display, surf);//used
    }
    assert(!display->ResourceLists[_EGL_RESOURCE_SURFACE]);
 
+   //no imagine or sync was loaded
+   /*
    list = display->ResourceLists[_EGL_RESOURCE_IMAGE];
    while (list) {
       _EGLImage *image = (_EGLImage *) list;
       list = list->Next;
 
       _eglUnlinkImage(image);
-      drv->API.DestroyImageKHR(drv, display, image);
+      drv->API.DestroyImageKHR(drv, display, image);//never used
    }
    assert(!display->ResourceLists[_EGL_RESOURCE_IMAGE]);
 
@@ -328,9 +329,9 @@ _eglReleaseDisplayResources(_EGLDriver *drv, _EGLDisplay *display)
       list = list->Next;
 
       _eglUnlinkSync(sync);
-      drv->API.DestroySyncKHR(drv, display, sync);
+      drv->API.DestroySyncKHR(drv, display, sync);//never used
    }
-   assert(!display->ResourceLists[_EGL_RESOURCE_SYNC]);
+   assert(!display->ResourceLists[_EGL_RESOURCE_SYNC]);*/
 }
 
 
@@ -390,7 +391,7 @@ _eglCheckResource(void *res, _EGLResourceType type, _EGLDisplay *dpy)
       list = list->Next;
    }
 
-   return (list != NULL);
+   return (EGLBoolean)(list != NULL);
 }
 
 
@@ -404,7 +405,7 @@ _eglCheckResource(void *res, _EGLResourceType type, _EGLDisplay *dpy)
 void
 _eglInitResource(_EGLResource *res, EGLint size, _EGLDisplay *dpy)
 {
-   memset(res, 0, size);
+   memset(res, 0, (size_t)size);
    res->Display = dpy;
    res->RefCount = 1;
 }
@@ -509,7 +510,7 @@ _eglParseX11DisplayAttribList(const EGLint *attrib_list)
    }
 
    return EGL_TRUE;*/
-    return NULL;
+    return EGL_FALSE;
 }
 
 _EGLDisplay*

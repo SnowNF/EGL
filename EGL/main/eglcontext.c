@@ -31,6 +31,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "eglconfig.h"
 #include "eglcontext.h"
 #include "egldisplay.h"
@@ -544,6 +545,9 @@ EGLBoolean
 _eglQueryContext(_EGLDriver *drv, _EGLDisplay *dpy, _EGLContext *c,
                  EGLint attribute, EGLint *value)
 {
+   //never used
+   //FIXME: need more test.
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    (void) drv;
    (void) dpy;
 
@@ -558,7 +562,7 @@ _eglQueryContext(_EGLDriver *drv, _EGLDisplay *dpy, _EGLContext *c,
        *    "Querying EGL_CONFIG_ID returns the ID of the EGLConfig with
        *     respect to which the context was created, or zero if created
        *     without respect to an EGLConfig."
-       */
+       *//*
       *value = c->Config ? c->Config->ConfigID : 0;
       break;
    case EGL_CONTEXT_CLIENT_VERSION:
@@ -574,7 +578,8 @@ _eglQueryContext(_EGLDriver *drv, _EGLDisplay *dpy, _EGLContext *c,
       return _eglError(EGL_BAD_ATTRIBUTE, "eglQueryContext");
    }
 
-   return EGL_TRUE;
+   return EGL_TRUE;*/
+   return EGL_FALSE;
 }
 
 

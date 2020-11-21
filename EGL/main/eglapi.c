@@ -204,6 +204,7 @@ _eglCheckContext(_EGLDisplay *disp, _EGLContext *context, const char *msg)
 static inline _EGLDriver *
 _eglCheckConfig(_EGLDisplay *disp, _EGLConfig *conf, const char *msg)
 {
+   //used
    _EGLDriver *drv = _eglCheckDisplay(disp, msg);
    if (!drv)
       return NULL;
@@ -332,10 +333,13 @@ _eglConvertIntsToAttribs(const EGLint *int_list, EGLAttrib **out_attrib_list)
 
 static EGLint *
 _eglConvertAttribsToInt(const EGLAttrib *attr_list)
-{exit(0);
+{
+    //never used
+    //FIXME: need more test.
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    EGLint *int_attribs = NULL;
 
-   /* Convert attributes from EGLAttrib[] to EGLint[] */
+   /* Convert attributes from EGLAttrib[] to EGLint[] *//*
    if (attr_list) {
       int i, size = 0;
 
@@ -345,14 +349,15 @@ _eglConvertAttribsToInt(const EGLAttrib *attr_list)
       size += 1; /* add space for EGL_NONE */
 
 //      int_attribs = calloc((size_t)size, sizeof(int_attribs[0]));
-       int_attribs = calloc((size_t)size, sizeof(EGLint));
+/*       int_attribs = calloc((size_t)size, sizeof(EGLint));
       if (!int_attribs)
          return NULL;
 
       for (i = 0; i < size; i++)
          int_attribs[i] = (EGLint)attr_list[i];
    }
-   return int_attribs;
+   return int_attribs;*/
+    return 0;
 }
 
 

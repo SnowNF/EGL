@@ -52,44 +52,44 @@ _eglInitDriverFallbacks(_EGLDriver *drv)
    memset(&drv->API, 0, sizeof(drv->API));
 
    /* the driver has to implement these */
-   drv->API.Initialize = NULL;
-   drv->API.Terminate = NULL;
+   drv->API.Initialize = NULL; //override by driver
+   drv->API.Terminate = NULL; //override by driver
 
-   drv->API.GetConfigs = _eglGetConfigs;
-   drv->API.ChooseConfig = _eglChooseConfig;
-   drv->API.GetConfigAttrib = _eglGetConfigAttrib;
+   drv->API.GetConfigs = _eglGetConfigs; //never used
+   drv->API.ChooseConfig = _eglChooseConfig; //used
+   drv->API.GetConfigAttrib = _eglGetConfigAttrib; //used
 
-   drv->API.CreateContext = (void*) _eglReturnFalse;
-   drv->API.DestroyContext = (void*) _eglReturnFalse;
-   drv->API.MakeCurrent = (void*) _eglReturnFalse;
-   drv->API.QueryContext = _eglQueryContext;
+   drv->API.CreateContext = (void*) _eglReturnFalse; //override by driver
+   drv->API.DestroyContext = (void*) _eglReturnFalse; //override by driver
+   drv->API.MakeCurrent = (void*) _eglReturnFalse; //override by driver
+   drv->API.QueryContext = _eglQueryContext; //never used
 
-   drv->API.CreateWindowSurface = (void*) _eglReturnFalse;
-   drv->API.CreatePixmapSurface = (void*) _eglReturnFalse;
-   drv->API.CreatePbufferSurface = (void*) _eglReturnFalse;
+   drv->API.CreateWindowSurface = (void*) _eglReturnFalse; //override by driver
+   drv->API.CreatePixmapSurface = (void*) _eglReturnFalse; //never used //override by driver
+   drv->API.CreatePbufferSurface = (void*) _eglReturnFalse; //override by driver
    drv->API.CreatePbufferFromClientBuffer =
-      (void*) _eglReturnFalse;
-   drv->API.DestroySurface = (void*) _eglReturnFalse;
-   drv->API.QuerySurface = _eglQuerySurface;
+      (void*) _eglReturnFalse; //override by driver
+   drv->API.DestroySurface = (void*) _eglReturnFalse; //override by driver
+   drv->API.QuerySurface = _eglQuerySurface; //never used //override by driver
    drv->API.SurfaceAttrib = _eglSurfaceAttrib;
 
-   drv->API.BindTexImage = (void*) _eglReturnFalse;
-   drv->API.ReleaseTexImage = (void*) _eglReturnFalse;
-   drv->API.CopyBuffers = (void*) _eglReturnFalse;
-   drv->API.SwapBuffers = (void*) _eglReturnFalse;
+   drv->API.BindTexImage = (void*) _eglReturnFalse; //never used //override by driver
+   drv->API.ReleaseTexImage = (void*) _eglReturnFalse; //never used //override by driver
+   drv->API.CopyBuffers = (void*) _eglReturnFalse; //never used //override by driver
+   drv->API.SwapBuffers = (void*) _eglReturnFalse; //override by driver
    drv->API.SwapInterval = _eglSwapInterval;
 
-   drv->API.WaitClient = (void*) _eglReturnFalse;
-   drv->API.WaitNative = (void*) _eglReturnFalse;
-   drv->API.GetProcAddress = (void*) _eglReturnFalse;
+   drv->API.WaitClient = (void*) _eglReturnFalse; //override by driver
+   drv->API.WaitNative = (void*) _eglReturnFalse; //override by driver
+   drv->API.GetProcAddress = (void*) _eglReturnFalse; //override by driver
 
-   drv->API.CreateImageKHR = NULL;
-   drv->API.DestroyImageKHR = NULL;
+   drv->API.CreateImageKHR = NULL; //never used //override by driver
+   drv->API.DestroyImageKHR = NULL; //override by driver
 
-   drv->API.CreateSyncKHR = NULL;
-   drv->API.DestroySyncKHR = NULL;
-   drv->API.ClientWaitSyncKHR = NULL;
-   drv->API.WaitSyncKHR = NULL;
+   drv->API.CreateSyncKHR = NULL; //never used //override by driver
+   drv->API.DestroySyncKHR = NULL; //never used //override by driver
+   drv->API.ClientWaitSyncKHR = NULL; //never used //override by driver
+   drv->API.WaitSyncKHR = NULL; //never used //override by driver
    drv->API.SignalSyncKHR = NULL;
    drv->API.GetSyncAttrib = _eglGetSyncAttrib;
 

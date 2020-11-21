@@ -36,6 +36,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 #include "c99_compat.h"
 
 #include "eglcompiler.h"
@@ -788,6 +789,7 @@ EGLBoolean
 _eglChooseConfig(_EGLDriver *drv, _EGLDisplay *disp, const EGLint *attrib_list,
                  EGLConfig *configs, EGLint config_size, EGLint *num_configs)
 {
+   //used
    _EGLConfig criteria;
 
    if (!_eglParseConfigAttribList(&criteria, disp, attrib_list))
@@ -807,6 +809,7 @@ EGLBoolean
 _eglGetConfigAttrib(_EGLDriver *drv, _EGLDisplay *dpy, _EGLConfig *conf,
                     EGLint attribute, EGLint *value)
 {
+   //used
    if (!_eglIsConfigAttribValid(conf, attribute))
       return _eglError(EGL_BAD_ATTRIBUTE, "eglGetConfigAttrib");
 
@@ -829,11 +832,14 @@ _eglGetConfigAttrib(_EGLDriver *drv, _EGLDisplay *dpy, _EGLConfig *conf,
 
 static EGLBoolean
 _eglFlattenConfig(void *elem, void *buffer)
-{
+{   //never used
+   //FIXME: need more test.
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _EGLConfig *conf = (_EGLConfig *) elem;
    EGLConfig *handle = (EGLConfig *) buffer;
    *handle = _eglGetConfigHandle(conf);
-   return EGL_TRUE;
+   return EGL_TRUE;*/
+   return EGL_FALSE;
 }
 
 /**
@@ -843,11 +849,15 @@ EGLBoolean
 _eglGetConfigs(_EGLDriver *drv, _EGLDisplay *disp, EGLConfig *configs,
                EGLint config_size, EGLint *num_config)
 {
+   //never used
+   //FIXME: need more test.
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    if (!num_config)
       return _eglError(EGL_BAD_PARAMETER, "eglGetConfigs");
 
    *num_config = _eglFlattenArray(disp->Configs, (void *) configs,
          sizeof(configs[0]), config_size, _eglFlattenConfig);
 
-   return EGL_TRUE;
+   return EGL_TRUE;*/
+   return EGL_FALSE;
 }

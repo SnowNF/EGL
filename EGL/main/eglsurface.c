@@ -36,6 +36,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "egldisplay.h"
 #include "egldriver.h"
 #include "eglcontext.h"
@@ -302,14 +303,14 @@ _eglInitSurface(_EGLSurface *surf, _EGLDisplay *dpy, EGLint type,
    surf->TextureTarget = EGL_NO_TEXTURE;
    surf->MipmapTexture = EGL_FALSE;
    surf->LargestPbuffer = EGL_FALSE;
-   surf->RenderBuffer = renderBuffer;
+   surf->RenderBuffer = (EGLenum)renderBuffer;
    surf->VGAlphaFormat = EGL_VG_ALPHA_FORMAT_NONPRE;
    surf->VGColorspace = EGL_VG_COLORSPACE_sRGB;
    surf->GLColorspace = EGL_GL_COLORSPACE_LINEAR_KHR;
 
    surf->MipmapLevel = 0;
    surf->MultisampleResolve = EGL_MULTISAMPLE_RESOLVE_DEFAULT;
-   surf->SwapBehavior = swapBehavior;
+   surf->SwapBehavior = (EGLenum)swapBehavior;
 
    surf->HorizontalResolution = EGL_UNKNOWN;
    surf->VerticalResolution = EGL_UNKNOWN;
@@ -338,6 +339,9 @@ EGLBoolean
 _eglQuerySurface(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surface,
                  EGLint attribute, EGLint *value)
 {
+   //never used
+   //FIXME: need more test.
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    switch (attribute) {
    case EGL_WIDTH:
       *value = surface->Width;
@@ -353,7 +357,7 @@ _eglQuerySurface(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surface,
          *value = surface->LargestPbuffer;
       break;
    case EGL_TEXTURE_FORMAT:
-      /* texture attributes: only for pbuffers, no error otherwise */
+      /* texture attributes: only for pbuffers, no error otherwise *//*
       if (surface->Type == EGL_PBUFFER_BIT)
          *value = surface->TextureFormat;
       break;
@@ -415,7 +419,8 @@ _eglQuerySurface(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surface,
       return EGL_FALSE;
    }
 
-   return EGL_TRUE;
+   return EGL_TRUE;*/
+   return EGL_FALSE;
 }
 
 
@@ -426,6 +431,9 @@ EGLBoolean
 _eglSurfaceAttrib(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surface,
                   EGLint attribute, EGLint value)
 {
+   //never used
+   //FIXME: need more test.
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    EGLint confval;
    EGLint err = EGL_SUCCESS;
    EGLint all_es_bits = EGL_OPENGL_ES_BIT |
@@ -482,7 +490,8 @@ _eglSurfaceAttrib(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surface,
 
    if (err != EGL_SUCCESS)
       return _eglError(err, "eglSurfaceAttrib");
-   return EGL_TRUE;
+   return EGL_TRUE;*/
+   return EGL_FALSE;
 }
 
 
@@ -490,12 +499,14 @@ EGLBoolean
 _eglBindTexImage(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surface,
                  EGLint buffer)
 {
-   exit(0);
+   //never used
+   //FIXME: need more test.
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    EGLint texture_type = EGL_PBUFFER_BIT;
 
    /* Just do basic error checking and return success/fail.
     * Drivers must implement the real stuff.
-    */
+    *//*
 
    if (dpy->Extensions.NOK_texture_from_pixmap)
       texture_type |= EGL_PIXMAP_BIT;
@@ -522,7 +533,8 @@ _eglBindTexImage(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surface,
 
    surface->BoundToTexture = EGL_TRUE;
 
-   return EGL_TRUE;
+   return EGL_TRUE;*/
+   return EGL_FALSE;
 }
 
 EGLBoolean
@@ -541,6 +553,10 @@ EGLBoolean
 _eglSwapInterval(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surf,
                  EGLint interval)
 {
+   //never used
+   //FIXME: need more test.
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
    _eglClampSwapInterval(surf, interval);
-   return EGL_TRUE;
+   return EGL_TRUE;*/
+   return EGL_FALSE;
 }
