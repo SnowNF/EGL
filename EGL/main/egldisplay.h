@@ -140,8 +140,15 @@ struct _egl_display
 
    mtx_t Mutex;
 
-   _EGLPlatformType Platform; /**< The type of the platform display */  //added by func: _eglFindDisplay() ,might be   _EGL_PLATFORM_X11
-   void *PlatformDisplay;     /**< A pointer to the platform display */  //指向eglGetDisplay()的第一个参数
+
+    //added by func: _eglFindDisplay()
+    // might be   _EGL_PLATFORM_X11
+   _EGLPlatformType Platform; /**< The type of the platform display */
+    //eglGetDisplay()的第一个参数
+    //一般是 0 或者 Window(Xlib.h) 的指针
+   void *PlatformDisplay;     /**< A pointer to the platform display */
+
+
 
    _EGLDriver *Driver;        /**< Matched driver of the display */
    EGLBoolean Initialized;    /**< True if the display is initialized */
@@ -152,8 +159,13 @@ struct _egl_display
       EGLBoolean UseFallback; /**< Use fallback driver (sw or less features) */
    } Options;
 
+
    /* these fields are set by the driver during init */
-   void *DriverData;          /**< Driver private data */ //might be loaded at dri2_initialize_x11_swrast()
+    // *DriverData: the printer of struct dri2_egl_display
+    // might be loaded at dri2_initialize_x11_swrast()
+   void *DriverData;        /**< Driver private data */
+
+
    EGLint Version;     //14   /**< EGL version major*10+minor */
    EGLint ClientAPIs;         /**< Bitmask of APIs supported (EGL_xxx_BIT) */
    _EGLExtensions Extensions; /**< Extensions supported */

@@ -58,12 +58,7 @@ const struct {
    const char *name;
    _EGLMain_t main;
 } _eglBuiltInDrivers[] = {
-#ifdef _EGL_BUILT_IN_DRIVER_DRI2
    { "egl_dri2", _eglBuiltInDriverDRI2 },
-#endif
-#ifdef _EGL_BUILT_IN_DRIVER_HAIKU
-   { "egl_haiku", _eglBuiltInDriverHaiku },
-#endif
    { NULL, NULL }
 };
 

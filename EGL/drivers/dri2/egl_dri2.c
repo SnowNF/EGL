@@ -340,9 +340,12 @@ dri2_add_config(_EGLDisplay *disp, const __DRIconfig *dri_config, int id,
 __DRIimage *
 dri2_lookup_egl_image(__DRIscreen *screen, void *image, void *data)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   return NULL;
+#else
    _EGLDisplay *disp = data;
    struct dri2_egl_image *dri2_img;
    _EGLImage *img;
@@ -357,8 +360,9 @@ dri2_lookup_egl_image(__DRIscreen *screen, void *image, void *data)
 
    dri2_img = dri2_egl_image(image);
 
-   return dri2_img->dri_image;*/
-   return NULL;
+   return dri2_img->dri_image;
+#endif
+
 }
 
 const __DRIimageLookupExtension image_lookup_extension = {
@@ -372,19 +376,21 @@ struct dri2_extension_match {
    int version;
    int offset;
 };
-/*
+
+#ifndef DELETED_FUNC
 static const struct dri2_extension_match dri3_driver_extensions[] = {
    { __DRI_CORE, 1, offsetof(struct dri2_egl_display, core) },
    { __DRI_IMAGE_DRIVER, 1, offsetof(struct dri2_egl_display, image_driver) },
    { NULL, 0, 0 }
 };
-
+#endif
+#ifndef DELETED_FUNC
 static const struct dri2_extension_match dri2_driver_extensions[] = {
    { __DRI_CORE, 1, offsetof(struct dri2_egl_display, core) },
    { __DRI_DRI2, 2, offsetof(struct dri2_egl_display, dri2) },
    { NULL, 0, 0 }
-};*/
-
+};
+#endif
 static const struct dri2_extension_match dri2_core_extensions[] = {
    { __DRI2_FLUSH, 1, offsetof(struct dri2_egl_display, flush) },
    { __DRI_TEX_BUFFER, 2, offsetof(struct dri2_egl_display, tex_buffer) },
@@ -546,11 +552,15 @@ int asprintf (char **__restrict __ptr,
    return extensions;
 }
 
+
 EGLBoolean
 dri2_load_driver_dri3(_EGLDisplay *disp)
-{//never used
+{
+#ifdef DELETED_FUNC
+    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    const __DRIextension **extensions;
 
@@ -564,15 +574,22 @@ dri2_load_driver_dri3(_EGLDisplay *disp)
    }
    dri2_dpy->driver_extensions = extensions;
 
-   return EGL_TRUE;*/
+   return EGL_TRUE;
+   #endif
    return EGL_FALSE;
 }
 
+
+
 EGLBoolean
 dri2_load_driver(_EGLDisplay *disp)
-{//never used
+{
+#ifdef DELETED_FUNC
+    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    return EGL_FALSE;
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    const __DRIextension **extensions;
 
@@ -586,10 +603,9 @@ dri2_load_driver(_EGLDisplay *disp)
    }
    dri2_dpy->driver_extensions = extensions;
 
-   return EGL_TRUE;*/
-   return EGL_FALSE;
+   return EGL_TRUE;
+#endif
 }
-
 EGLBoolean
 dri2_load_driver_swrast(_EGLDisplay *disp)
 {
@@ -802,7 +818,10 @@ dri2_initialize(_EGLDriver *drv, _EGLDisplay *disp)
 {
    //used
    EGLBoolean ret = EGL_FALSE;
-   struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
+
+
+   struct dri2_egl_display *dri2_dpy = disp->DriverData;//dri2_egl_display(disp);
+
 
    /* In the case where the application calls eglMakeCurrent(context1),
     * eglTerminate, then eglInitialize again (without a call to eglReleaseThread
@@ -1277,8 +1296,8 @@ static EGLBoolean
 dri2_destroy_context(_EGLDriver *drv, _EGLDisplay *disp, _EGLContext *ctx)
 {
    //used
-   struct dri2_egl_context *dri2_ctx = dri2_egl_context(ctx);
-   struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
+   struct dri2_egl_context *dri2_ctx = (struct dri2_egl_context*)ctx;//dri2_egl_context(ctx);
+   struct dri2_egl_display *dri2_dpy = (struct dri2_egl_display*)disp->DriverData;//dri2_egl_display(disp);
 
    if (_eglPutContext(ctx)) {
       dri2_dpy->core->destroyContext(dri2_ctx->dri_context);
@@ -1442,9 +1461,12 @@ dri2_swap_interval(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surf,
 void
 dri2_flush_drawable_for_swapbuffers(_EGLDisplay *disp, _EGLSurface *draw)
 {
+#ifdef MINIMAL_FUNC
     //never used
     //FIXME: need more test.
-    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    __DRIdrawable *dri_drawable = dri2_dpy->vtbl->get_dri_drawable(draw);
 
@@ -1454,7 +1476,7 @@ dri2_flush_drawable_for_swapbuffers(_EGLDisplay *disp, _EGLSurface *draw)
           *
           *     "If surface is not bound to the calling thread’s current
           *      context, an EGL_BAD_SURFACE error is generated."
-         *//*
+         */
          _EGLContext *ctx = _eglGetCurrentContext();
          struct dri2_egl_context *dri2_ctx = dri2_egl_context(ctx);
 
@@ -1462,7 +1484,7 @@ dri2_flush_drawable_for_swapbuffers(_EGLDisplay *disp, _EGLSurface *draw)
           *
           *     "The contents of ancillary buffers are always undefined
           *      after calling eglSwapBuffers."
-          *//*
+          */
          dri2_dpy->flush->flush_with_flags(dri2_ctx->dri_context,
                                            dri_drawable,
                                            __DRI2_FLUSH_DRAWABLE |
@@ -1471,15 +1493,23 @@ dri2_flush_drawable_for_swapbuffers(_EGLDisplay *disp, _EGLSurface *draw)
       } else {
          dri2_dpy->flush->flush(dri_drawable);
       }
-   }*/
+   }
+#endif
 }
+
+static inline struct dri2_egl_display *cast_dri2_egl_display(const _EGLDisplay *obj)
+   {
+      return (struct dri2_egl_display *) obj->DriverData;
+   }
 
 static EGLBoolean
 dri2_swap_buffers(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surf)
 {
+    // *drv is not used
    //used
-   struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
-   return dri2_dpy->vtbl->swap_buffers(drv, dpy, surf);
+    struct dri2_egl_display *dri2_dpy = cast_dri2_egl_display(dpy);
+
+    return dri2_dpy->vtbl->swap_buffers(drv, dpy, surf);
 }
 
 static EGLBoolean
@@ -1536,9 +1566,12 @@ dri2_query_buffer_age(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surf)
 static EGLBoolean
 dri2_wait_client(_EGLDriver *drv, _EGLDisplay *disp, _EGLContext *ctx)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   return EGL_FALSE;
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    _EGLSurface *surf = ctx->DrawSurface;
    __DRIdrawable *dri_drawable = dri2_dpy->vtbl->get_dri_drawable(surf);
@@ -1547,38 +1580,45 @@ dri2_wait_client(_EGLDriver *drv, _EGLDisplay *disp, _EGLContext *ctx)
 
    /* FIXME: If EGL allows frontbuffer rendering for window surfaces,
     * we need to copy fake to real here.*/
-/*
+
    if (dri2_dpy->flush != NULL)
       dri2_dpy->flush->flush(dri_drawable);
 
-   return EGL_TRUE;*/
-   return EGL_FALSE;
+   return EGL_TRUE;
+#endif
+
 }
 
 static EGLBoolean
 dri2_wait_native(_EGLDriver *drv, _EGLDisplay *disp, EGLint engine)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   return EGL_FALSE;
+#else
    (void) drv;
    (void) disp;
 
    if (engine != EGL_CORE_NATIVE_ENGINE)
       return _eglError(EGL_BAD_PARAMETER, "eglWaitNative");
    /* glXWaitX(); */
-/*
-   return EGL_TRUE;*/
-   return EGL_FALSE;
+
+   return EGL_TRUE;
+#endif
 }
 
 static EGLBoolean
 dri2_bind_tex_image(_EGLDriver *drv,
                     _EGLDisplay *disp, _EGLSurface *surf, EGLint buffer)
-{    //never used
+{
+#ifdef MINIMAL_FUNC
+    //never used
     //FIXME: need more test.
     fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
-    /*
+    return EGL_FALSE;
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    struct dri2_egl_context *dri2_ctx;
    _EGLContext *ctx;
@@ -1616,16 +1656,20 @@ dri2_bind_tex_image(_EGLDriver *drv,
                                           target, format,
                                           dri_drawable);
 
-   return EGL_TRUE;*/
-    return EGL_FALSE;
+   return EGL_TRUE;
+#endif
 }
 
 static EGLBoolean
 dri2_release_tex_image(_EGLDriver *drv,
                        _EGLDisplay *disp, _EGLSurface *surf, EGLint buffer)
-{    //never used
+{
+#ifdef MINIMAL_FUNC
+    //never used
     //FIXME: need more test.
-    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    return EGL_FALSE;
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    struct dri2_egl_context *dri2_ctx;
    _EGLContext *ctx;
@@ -1653,8 +1697,9 @@ dri2_release_tex_image(_EGLDriver *drv,
                                                 dri_drawable);
    }
 
-   return EGL_TRUE;*/
-    return EGL_FIXED_SIZE_ANGLE;
+   return EGL_TRUE;
+#endif
+
 }
 
 static _EGLImage*
@@ -1662,21 +1707,29 @@ dri2_create_image(_EGLDriver *drv, _EGLDisplay *dpy, _EGLContext *ctx,
                   EGLenum target, EGLClientBuffer buffer,
                   const EGLint *attr_list)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    return NULL;
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
    return dri2_dpy->vtbl->create_image(drv, dpy, ctx, target, buffer,
-                                       attr_list);*/
-   return NULL;
+                                       attr_list);
+#endif
+;
 }
 
 static _EGLImage *
 dri2_create_image_from_dri(_EGLDisplay *disp, __DRIimage *dri_image)
-{    //never used
+{
+#ifdef MINIMAL_FUNC
+    //never used
     //FIXME: need more test.
     fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
-    /*
+    return NULL;
+#else
+
    struct dri2_egl_image *dri2_img;
 
    if (dri_image == NULL) {
@@ -1697,17 +1750,21 @@ dri2_create_image_from_dri(_EGLDisplay *disp, __DRIimage *dri_image)
 
    dri2_img->dri_image = dri_image;
 
-   return &dri2_img->base;*/
+   return &dri2_img->base;
+#endif
 }
 
 static _EGLImage *
 dri2_create_image_khr_renderbuffer(_EGLDisplay *disp, _EGLContext *ctx,
                                    EGLClientBuffer buffer,
                                    const EGLint *attr_list)
-{    //never used
+{
+#ifdef MINIMAL_FUNC
+    //never used
     //FIXME: need more test.
     fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
-    /*
+    return NULL;
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    struct dri2_egl_context *dri2_ctx = dri2_egl_context(ctx);
    GLuint renderbuffer = (GLuint) (uintptr_t) buffer;
@@ -1722,8 +1779,9 @@ dri2_create_image_khr_renderbuffer(_EGLDisplay *disp, _EGLContext *ctx,
       dri2_dpy->image->createImageFromRenderbuffer(dri2_ctx->dri_context,
                                                    renderbuffer, NULL);
 
-   return dri2_create_image_from_dri(disp, dri_image);*/
-    return NULL;
+   return dri2_create_image_from_dri(disp, dri_image);
+#endif
+
 }
 
 #ifdef HAVE_WAYLAND_PLATFORM
@@ -1794,12 +1852,15 @@ dri2_get_sync_values_chromium(_EGLDisplay *dpy, _EGLSurface *surf,
                               EGLuint64KHR *ust, EGLuint64KHR *msc,
                               EGLuint64KHR *sbc)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
-   struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
-   return dri2_dpy->vtbl->get_sync_values(dpy, surf, ust, msc, sbc);*/
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
    return EGL_FALSE;
+#else
+   struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
+   return dri2_dpy->vtbl->get_sync_values(dpy, surf, ust, msc, sbc);
+#endif
 }
 
 /**
@@ -1809,9 +1870,11 @@ dri2_get_sync_values_chromium(_EGLDisplay *dpy, _EGLSurface *surf,
 static void
 dri2_create_image_khr_texture_error(int dri_error)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+#else
    EGLint egl_error;
 
    switch (dri_error) {
@@ -1840,7 +1903,8 @@ dri2_create_image_khr_texture_error(int dri_error)
       break;
    }
 
-   _eglError(egl_error, "dri2_create_image_khr_texture");*/
+   _eglError(egl_error, "dri2_create_image_khr_texture");
+#endif
 }
 
 static _EGLImage *
@@ -1849,10 +1913,12 @@ dri2_create_image_khr_texture(_EGLDisplay *disp, _EGLContext *ctx,
                                    EGLClientBuffer buffer,
                                    const EGLint *attr_list)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
    fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
-   /*
+    return NULL;
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    struct dri2_egl_context *dri2_ctx = dri2_egl_context(ctx);
    struct dri2_egl_image *dri2_img;
@@ -1925,33 +1991,40 @@ dri2_create_image_khr_texture(_EGLDisplay *disp, _EGLContext *ctx,
       free(dri2_img);
       return EGL_NO_IMAGE_KHR;
    }
-   return &dri2_img->base;*/
-   return NULL;
+   return &dri2_img->base;
+#endif
 }
 
 static EGLBoolean
 dri2_query_surface(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surf,
                    EGLint attribute, EGLint *value)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
-   struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    return EGL_FALSE;
+#else
+    struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
    if (!dri2_dpy->vtbl->query_surface)
       return _eglQuerySurface(drv, dpy, surf, attribute, value);
-   return dri2_dpy->vtbl->query_surface(drv, dpy, surf, attribute, value);*/
-   return EGL_FALSE;
+   return dri2_dpy->vtbl->query_surface(drv, dpy, surf, attribute, value);
+#endif
 }
 
 static struct wl_buffer*
 dri2_create_wayland_buffer_from_image(_EGLDriver *drv, _EGLDisplay *dpy,
                                       _EGLImage *img)
-{    //never used
+{
+#ifdef MINIMAL_FUNC
+    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
-   struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
-   return dri2_dpy->vtbl->create_wayland_buffer_from_image(drv, dpy, img);*/
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
    return NULL;
+#else
+   struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
+   return dri2_dpy->vtbl->create_wayland_buffer_from_image(drv, dpy, img);
+#endif
 }
 
 #ifdef HAVE_LIBDRM
@@ -2405,10 +2478,12 @@ _EGLImage *
 dri2_create_image_khr(_EGLDriver *drv, _EGLDisplay *disp,
                       _EGLContext *ctx, EGLenum target,
                       EGLClientBuffer buffer, const EGLint *attr_list)
-{    //never used
+{
+#ifdef MINIMAL_FUNC
+    //never used
     //FIXME: need more test.
     fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
-    /*
+#else
    (void) drv;
 
    switch (target) {
@@ -2443,15 +2518,19 @@ dri2_create_image_khr(_EGLDriver *drv, _EGLDisplay *disp,
    default:
       _eglError(EGL_BAD_PARAMETER, "dri2_create_image_khr");
       return EGL_NO_IMAGE_KHR;
-   }*/
+   }
+#endif
 }
 
 static EGLBoolean
 dri2_destroy_image_khr(_EGLDriver *drv, _EGLDisplay *disp, _EGLImage *image)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   return EGL_FALSE;
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    struct dri2_egl_image *dri2_img = dri2_egl_image(image);
 
@@ -2460,8 +2539,9 @@ dri2_destroy_image_khr(_EGLDriver *drv, _EGLDisplay *disp, _EGLImage *image)
    dri2_dpy->image->destroyImage(dri2_img->dri_image);
    free(dri2_img);
 
-   return EGL_TRUE;*/
-   return EGL_FALSE;
+   return EGL_TRUE;
+#endif
+
 }
 
 #ifdef HAVE_WAYLAND_PLATFORM
@@ -2621,9 +2701,12 @@ dri2_egl_ref_sync(struct dri2_egl_sync *sync)
 static void
 dri2_egl_unref_sync(struct dri2_egl_display *dri2_dpy,
                     struct dri2_egl_sync *dri2_sync)
-{//never used
+{
+#ifdef MINIMAL_FUNC
+    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+#else
    if (p_atomic_dec_zero(&dri2_sync->refcount)) {
       if (dri2_sync->base.Type == EGL_SYNC_REUSABLE_KHR)
          cnd_destroy(&dri2_sync->cond);
@@ -2632,16 +2715,20 @@ dri2_egl_unref_sync(struct dri2_egl_display *dri2_dpy,
          dri2_dpy->fence->destroy_fence(dri2_dpy->dri_screen, dri2_sync->fence);
 
       free(dri2_sync);
-   }*/
+   }
+#endif
 }
 
 static _EGLSync *
 dri2_create_sync(_EGLDriver *drv, _EGLDisplay *dpy,
                  EGLenum type, const EGLAttrib *attrib_list)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    return NULL;
+#else
    _EGLContext *ctx = _eglGetCurrentContext();
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
    struct dri2_egl_context *dri2_ctx = dri2_egl_context(ctx);
@@ -2666,7 +2753,7 @@ dri2_create_sync(_EGLDriver *drv, _EGLDisplay *dpy,
       if (!dri2_sync->fence) {
          /* Why did it fail? DRI doesn't return an error code, so we emit
           * a generic EGL error that doesn't communicate user error.
-          *//*
+          */
          _eglError(EGL_BAD_ALLOC, "eglCreateSyncKHR");
          free(dri2_sync);
          return NULL;
@@ -2677,21 +2764,21 @@ dri2_create_sync(_EGLDriver *drv, _EGLDisplay *dpy,
       dri2_sync->fence = dri2_dpy->fence->get_fence_from_cl_event(
                                  dri2_dpy->dri_screen,
                                  dri2_sync->base.CLEvent);
-      /* this can only happen if the cl_event passed in is invalid. *//*
+      /* this can only happen if the cl_event passed in is invalid. */
       if (!dri2_sync->fence) {
          _eglError(EGL_BAD_ATTRIBUTE, "eglCreateSyncKHR");
          free(dri2_sync);
          return NULL;
       }
 
-      /* the initial status must be "signaled" if the cl_event is signaled *//*
+      /* the initial status must be "signaled" if the cl_event is signaled */
       if (dri2_dpy->fence->client_wait_sync(dri2_ctx->dri_context,
                                             dri2_sync->fence, 0, 0))
          dri2_sync->base.SyncStatus = EGL_SIGNALED_KHR;
       break;
 
    case EGL_SYNC_REUSABLE_KHR:
-      /* intialize attr *//*
+      /* intialize attr */
       ret = pthread_condattr_init(&attr);
 
       if (ret) {
@@ -2700,7 +2787,7 @@ dri2_create_sync(_EGLDriver *drv, _EGLDisplay *dpy,
          return NULL;
       }
 
-      /* change clock attribute to CLOCK_MONOTONIC *//*
+      /* change clock attribute to CLOCK_MONOTONIC */
       ret = pthread_condattr_setclock(&attr, CLOCK_MONOTONIC);
 
       if (ret) {
@@ -2717,22 +2804,25 @@ dri2_create_sync(_EGLDriver *drv, _EGLDisplay *dpy,
          return NULL;
       }
 
-      /* initial status of reusable sync must be "unsignaled" *//*
+      /* initial status of reusable sync must be "unsignaled" */
       dri2_sync->base.SyncStatus = EGL_UNSIGNALED_KHR;
       break;
    }
 
    p_atomic_set(&dri2_sync->refcount, 1);
-   return &dri2_sync->base;*/
-   return NULL;
+   return &dri2_sync->base;
+#endif
 }
 
 static EGLBoolean
 dri2_destroy_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    return EGL_FALSE;
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
    struct dri2_egl_sync *dri2_sync = dri2_egl_sync(sync);
    EGLint ret = EGL_TRUE;
@@ -2741,11 +2831,11 @@ dri2_destroy_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync)
    /* if type of sync is EGL_SYNC_REUSABLE_KHR and it is not signaled yet,
     * then unlock all threads possibly blocked by the reusable sync before
     * destroying it.
-    *//*
+    */
    if (dri2_sync->base.Type == EGL_SYNC_REUSABLE_KHR &&
        dri2_sync->base.SyncStatus == EGL_UNSIGNALED_KHR) {
       dri2_sync->base.SyncStatus = EGL_SIGNALED_KHR;
-      /* unblock all threads currently blocked by sync *//*
+      /* unblock all threads currently blocked by sync */
       err = cnd_broadcast(&dri2_sync->cond);
 
       if (err) {
@@ -2755,17 +2845,20 @@ dri2_destroy_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync)
    }
    dri2_egl_unref_sync(dri2_dpy, dri2_sync);
 
-   return ret;*/
-   return EGL_FALSE;
+   return ret;
+#endif
 }
 
 static EGLint
 dri2_client_wait_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync,
                       EGLint flags, EGLTime timeout)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   return 0;
+#else
    _EGLContext *ctx = _eglGetCurrentContext();
    struct dri2_egl_driver *dri2_drv = dri2_egl_driver(drv);
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
@@ -2773,7 +2866,7 @@ dri2_client_wait_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync,
    struct dri2_egl_sync *dri2_sync = dri2_egl_sync(sync);
    unsigned wait_flags = 0;
 
-   /* timespecs for cnd_timedwait *//*
+   /* timespecs for cnd_timedwait */
    struct timespec current;
    xtime expire;
 
@@ -2783,11 +2876,11 @@ dri2_client_wait_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync,
     *
     *    "If no context is current for the bound API,
     *     the EGL_SYNC_FLUSH_COMMANDS_BIT_KHR bit is ignored.
-    *//*
+    */
    if (dri2_ctx && flags & EGL_SYNC_FLUSH_COMMANDS_BIT_KHR)
       wait_flags |= __DRI2_FENCE_FLAG_FLUSH_COMMANDS;
 
-   /* the sync object should take a reference while waiting *//*
+   /* the sync object should take a reference while waiting */
    dri2_egl_ref_sync(dri2_sync);
 
    switch (sync->Type) {
@@ -2804,28 +2897,28 @@ dri2_client_wait_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync,
    case EGL_SYNC_REUSABLE_KHR:
       if (dri2_ctx && dri2_sync->base.SyncStatus == EGL_UNSIGNALED_KHR &&
           (flags & EGL_SYNC_FLUSH_COMMANDS_BIT_KHR)) {
-         /* flush context if EGL_SYNC_FLUSH_COMMANDS_BIT_KHR is set *//*
+         /* flush context if EGL_SYNC_FLUSH_COMMANDS_BIT_KHR is set */
          dri2_drv->glFlush();
       }
 
-      /* if timeout is EGL_FOREVER_KHR, it should wait without any timeout.*//*
+      /* if timeout is EGL_FOREVER_KHR, it should wait without any timeout.*/
       if (timeout == EGL_FOREVER_KHR) {
          mtx_lock(&dri2_sync->mutex);
          cnd_wait(&dri2_sync->cond, &dri2_sync->mutex);
          mtx_unlock(&dri2_sync->mutex);
       } else {
-         /* if reusable sync has not been yet signaled *//*
+         /* if reusable sync has not been yet signaled */
          if (dri2_sync->base.SyncStatus != EGL_SIGNALED_KHR) {
             clock_gettime(CLOCK_MONOTONIC, &current);
 
-            /* calculating when to expire *//*
+            /* calculating when to expire */
             expire.nsec = timeout % 1000000000L;
             expire.sec = timeout / 1000000000L;
 
             expire.nsec += current.tv_nsec;
             expire.sec += current.tv_sec;
 
-            /* expire.nsec now is a number between 0 and 1999999998 *//*
+            /* expire.nsec now is a number between 0 and 1999999998 */
             if (expire.nsec > 999999999L) {
                expire.sec++;
                expire.nsec -= 1000000000L;
@@ -2849,17 +2942,20 @@ dri2_client_wait_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync,
   }
   dri2_egl_unref_sync(dri2_dpy, dri2_sync);
 
-  return ret;*/
-   return 0;
+  return ret;
+#endif
 }
 
 static EGLBoolean
 dri2_signal_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync,
                       EGLenum mode)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   return EGL_FALSE;
+#else
    struct dri2_egl_sync *dri2_sync = dri2_egl_sync(sync);
    EGLint ret;
 
@@ -2878,23 +2974,26 @@ dri2_signal_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync,
    if (mode == EGL_SIGNALED_KHR) {
       ret = cnd_broadcast(&dri2_sync->cond);
 
-      /* fail to broadcast *//*
+      /* fail to broadcast */
       if (ret) {
          _eglError(EGL_BAD_ACCESS, "eglSignalSyncKHR");
          return EGL_FALSE;
       }
    }
 
-   return EGL_TRUE;*/
-   return EGL_FALSE;
+   return EGL_TRUE;
+#endif
 }
 
 static EGLint
 dri2_server_wait_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+   return 0;
+#else
    _EGLContext *ctx = _eglGetCurrentContext();
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
    struct dri2_egl_context *dri2_ctx = dri2_egl_context(ctx);
@@ -2902,17 +3001,21 @@ dri2_server_wait_sync(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSync *sync)
 
    dri2_dpy->fence->server_wait_sync(dri2_ctx->dri_context,
                                      dri2_sync->fence, 0);
-   return EGL_TRUE;*/
-   return 0;
+   return EGL_TRUE;
+#endif
+
 }
 
 static int
 dri2_interop_query_device_info(_EGLDisplay *dpy, _EGLContext *ctx,
                                struct mesa_glinterop_device_info *out)
-{//never used
+{
+#ifdef MINIMAL_FUNC
+    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
-   /*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    return 0;
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
    struct dri2_egl_context *dri2_ctx = dri2_egl_context(ctx);
 
@@ -2920,7 +3023,7 @@ dri2_interop_query_device_info(_EGLDisplay *dpy, _EGLContext *ctx,
       return MESA_GLINTEROP_UNSUPPORTED;
 
    return dri2_dpy->interop->query_device_info(dri2_ctx->dri_context, out);*/
-   return 0;
+#endif
 }
 
 static int
@@ -2928,17 +3031,20 @@ dri2_interop_export_object(_EGLDisplay *dpy, _EGLContext *ctx,
                            struct mesa_glinterop_export_in *in,
                            struct mesa_glinterop_export_out *out)
 {
+#ifdef MINIMAL_FUNC
    //never used
    //FIXME: need more test.
-   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);/*
+   fprintf(stderr,"libEGL: deleted method : %s\n",__func__);
+    return 0;
+#else
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
    struct dri2_egl_context *dri2_ctx = dri2_egl_context(ctx);
 
    if (!dri2_dpy->interop)
       return MESA_GLINTEROP_UNSUPPORTED;
 
-   return dri2_dpy->interop->export_object(dri2_ctx->dri_context, in, out);*/
-   return 0;
+   return dri2_dpy->interop->export_object(dri2_ctx->dri_context, in, out);
+#endif
 }
 
 static void

@@ -53,6 +53,8 @@ _eglGrowArray(_EGLArray *array)
             array->Name, new_size);
       return EGL_FALSE;
    }
+   _eglLog(_EGL_DEBUG, "succeeded to grow %s array to %d",
+           array->Name, new_size);
 
    array->Elements = elems;
    array->MaxSize = new_size;

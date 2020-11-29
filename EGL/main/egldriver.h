@@ -63,7 +63,10 @@ extern "C" {
  */
 #define _EGL_DRIVER_STANDARD_TYPECASTS(drvname)                            \
    _EGL_DRIVER_TYPECAST(drvname ## _driver, _EGLDriver, obj)               \
-   /* note that this is not a direct cast */                               \
+   /* note that this is not a direct cast
+ *    只有dri2_egl_display是_EGLDisplay->DriverData,其余都是直接强转
+ *    直接强转:_EGLDriver to
+ * */                                                                      \
    _EGL_DRIVER_TYPECAST(drvname ## _display, _EGLDisplay, obj->DriverData) \
    _EGL_DRIVER_TYPECAST(drvname ## _context, _EGLContext, obj)             \
    _EGL_DRIVER_TYPECAST(drvname ## _surface, _EGLSurface, obj)             \

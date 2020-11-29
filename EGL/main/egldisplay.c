@@ -244,6 +244,8 @@ _eglFiniDisplay(void)
 _EGLDisplay *
 _eglFindDisplay(_EGLPlatformType plat, void *plat_dpy)
 {
+   //plat : _EGL_PLATFORM_X11
+   //plat_dpy : 0 或者 Window(Xlib.h) 的指针
    _EGLDisplay *dpy;
 
    if (plat == _EGL_INVALID_PLATFORM)
@@ -263,6 +265,7 @@ _eglFindDisplay(_EGLPlatformType plat, void *plat_dpy)
 
    /* create a new display */
    if (!dpy) {  //如果dpy是空指针就执行以下代码。
+      _eglLog(_EGL_DEBUG,"create a new display with PlatformDisplay : %p",plat_dpy);
       dpy = calloc(1, sizeof(_EGLDisplay));//申请一个长度为_EGLDisplay的内存空间。
       if (dpy) {//不是空指针（申请成功）执行以下代码
          mtx_init(&dpy->Mutex, mtx_plain);

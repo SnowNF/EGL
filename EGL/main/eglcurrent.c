@@ -357,7 +357,9 @@ void
 _eglDebugReport(EGLenum error, const char *funcName,
       EGLint type, const char *message, ...)
 {
-   puts(message);
+   /*先判断是否为空指针*/
+    if(message)puts(message);
+
    _EGLThreadInfo *thr = _eglGetCurrentThread();
    va_list args;
 

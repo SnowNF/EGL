@@ -9,7 +9,6 @@
 
 #define _EGL_NATIVE_PLATFORM _EGL_PLATFORM_X11
 #define HAVE_X11_PLATFORM
-#define _EGL_BUILT_IN_DRIVER_DRI2
 
 //指定默认dri驱动搜索目录
 #define DEFAULT_DRIVER_DIR "/usr/local/lib/dri"
@@ -23,5 +22,14 @@
  _EGL_DEBUG   3    useful info for debugging
  */
 #define EGL_BUILD_LOG_LEVEL 3
+
+//去除一些原有的检查来提升fps，尤其是eglSwapBuffers()
+#define FAST_FUNC
+
+//已删除的，永远不会再使用的函数，取消定义此宏可能会引起编译错误
+#define DELETED_FUNC
+
+//通过gl4es能够运行glxgears，minecraft，particles的最少函数，速度最快，取消定义此宏会影响速度，但函数完整
+#define MINIMAL_FUNC
 
 #endif //EGL_EGL_CONFIG_H
