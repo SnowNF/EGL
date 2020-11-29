@@ -739,8 +739,9 @@ dri2_create_screen(_EGLDisplay *disp)
 {
    //used
    const __DRIextension **extensions;
-   struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);//强转宏..
+   struct dri2_egl_display *dri2_dpy =disp->DriverData; // dri2_egl_display(disp);//强转宏..
 
+#ifndef DELETED_FUNC
    if (dri2_dpy->image_driver) {
       dri2_dpy->dri_screen =
          dri2_dpy->image_driver->createNewScreen2(0, dri2_dpy->fd,
@@ -748,7 +749,9 @@ dri2_create_screen(_EGLDisplay *disp)
                                                   dri2_dpy->driver_extensions,
                                                   &dri2_dpy->driver_configs,
                                                   disp);
-   } else if (dri2_dpy->dri2) {
+   }
+
+   else if (dri2_dpy->dri2) {
       if (dri2_dpy->dri2->base.version >= 4) {
          dri2_dpy->dri_screen =
             dri2_dpy->dri2->createNewScreen2(0, dri2_dpy->fd,
@@ -761,7 +764,10 @@ dri2_create_screen(_EGLDisplay *disp)
                                             dri2_dpy->loader_extensions,
                                             &dri2_dpy->driver_configs, disp);
       }
-   } else {//总是执行
+   }
+   else {//总是执行
+#endif
+
        _eglLog(_EGL_DEBUG,"Swrast version : %d",dri2_dpy->swrast->base.version);
       assert(dri2_dpy->swrast);//再是空指针就去死
       if (dri2_dpy->swrast->base.version >= 4) {
@@ -775,7 +781,9 @@ dri2_create_screen(_EGLDisplay *disp)
             dri2_dpy->swrast->createNewScreen(0, dri2_dpy->loader_extensions,
                                               &dri2_dpy->driver_configs, disp);
       }
+#ifndef DELETED_FUNC
    }
+#endif
 
    if (dri2_dpy->dri_screen == NULL) {
       _eglLog(_EGL_WARNING, "DRI2: failed to create dri screen");
@@ -786,7 +794,8 @@ dri2_create_screen(_EGLDisplay *disp)
 
    extensions = dri2_dpy->core->getExtensions(dri2_dpy->dri_screen);
 
-   if (dri2_dpy->image_driver || dri2_dpy->dri2) {
+ /*  if (dri2_dpy->image_driver || dri2_dpy->dri2) {
+
       if (!dri2_bind_extensions(dri2_dpy, dri2_core_extensions, extensions, false))
          goto cleanup_dri_screen;
    } else {
@@ -794,7 +803,10 @@ dri2_create_screen(_EGLDisplay *disp)
       assert(dri2_dpy->swrast);
       if (!dri2_bind_extensions(dri2_dpy, swrast_core_extensions, extensions, false))
          goto cleanup_dri_screen;
-   }
+   }*/
+    assert(dri2_dpy->swrast);
+    if (!dri2_bind_extensions(dri2_dpy, swrast_core_extensions, extensions, false))
+        goto cleanup_dri_screen;
 
    dri2_bind_extensions(dri2_dpy, optional_core_extensions, extensions, true);
    dri2_setup_screen(disp);//根据disp设置特性的true/false
@@ -816,6 +828,7 @@ dri2_create_screen(_EGLDisplay *disp)
 static EGLBoolean
 dri2_initialize(_EGLDriver *drv, _EGLDisplay *disp)
 {
+    //drv* is not used
    //used
    EGLBoolean ret = EGL_FALSE;
 
@@ -856,7 +869,7 @@ dri2_initialize(_EGLDriver *drv, _EGLDisplay *disp)
 #endif
 #ifdef HAVE_X11_PLATFORM
    case _EGL_PLATFORM_X11://执行以下代码。。。
-      ret = dri2_initialize_x11(drv, disp);
+      ret = dri2_initialize_x11(drv, disp);//drv* is not used
       break;
 #endif
 #ifdef HAVE_DRM_PLATFORM
@@ -1201,6 +1214,7 @@ dri2_create_context(_EGLDriver *drv, _EGLDisplay *disp, _EGLConfig *conf,
    else
       dri_config = NULL;
 
+#ifndef DELETED_FUNC
    if (dri2_dpy->image_driver) {
       unsigned error;
       unsigned num_attribs = 8;
@@ -1249,8 +1263,10 @@ dri2_create_context(_EGLDriver *drv, _EGLDisplay *disp, _EGLConfig *conf,
                                                    dri2_ctx);
       }
    } else {
+#endif
       assert(dri2_dpy->swrast);
       if (dri2_dpy->swrast->base.version >= 3) {
+          //used
          unsigned error;
          unsigned num_attribs = 8;
          uint32_t ctx_attribs[8];
@@ -1270,6 +1286,7 @@ dri2_create_context(_EGLDriver *drv, _EGLDisplay *disp, _EGLConfig *conf,
                                                    dri2_ctx);
          dri2_create_context_attribs_error(error);
       } else {
+          //unused
          dri2_ctx->dri_context =
             dri2_dpy->swrast->createNewContextForAPI(dri2_dpy->dri_screen,
                                                      api,
@@ -1277,7 +1294,9 @@ dri2_create_context(_EGLDriver *drv, _EGLDisplay *disp, _EGLConfig *conf,
                                                      shared,
                                                      dri2_ctx);
       }
+#ifndef DELETED_FUNC
    }
+#endif
 
    if (!dri2_ctx->dri_context)
       goto cleanup;
@@ -3059,7 +3078,8 @@ dri2_unload(_EGLDriver *drv)
 static EGLBoolean
 dri2_load(_EGLDriver *drv)
 {
-   struct dri2_egl_driver *dri2_drv = dri2_egl_driver(drv);
+   //传入base小指针，转换成原来的大指针struct dri2_egl_driver)
+   struct dri2_egl_driver *dri2_drv = (struct dri2_egl_driver*)drv;//dri2_egl_driver(drv);
 #ifdef HAVE_ANDROID_PLATFORM
    const char *libname = "libglapi.so";
 #elif defined(__APPLE__)
@@ -3115,12 +3135,13 @@ _eglBuiltInDriverDRI2(const char *args)
     _eglLog(_EGL_DEBUG,"Init DRI2 driver");
    struct dri2_egl_driver *dri2_drv;
 
-   (void) args;
 
-   dri2_drv = calloc(1, sizeof *dri2_drv);
+   dri2_drv = calloc(1, sizeof (struct dri2_egl_driver));
    if (!dri2_drv)
+      //calloc失败
       return NULL;
-
+      //&dri2_drv->base返回那个结构体的base的指针
+      //加载dri2_drv里的全部东西（除了base）
    if (!dri2_load(&dri2_drv->base)) {
       free(dri2_drv);
       return NULL;

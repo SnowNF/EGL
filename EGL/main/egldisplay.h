@@ -132,8 +132,8 @@ struct _egl_extensions
    EGLBoolean WL_create_wayland_buffer_from_image;
 };
 
-
-struct _egl_display
+//malloc at egldisplay.c ： _eglFindDisplay
+struct _egl_display//_EGLDisplay
 {
    /* used to link displays */
    _EGLDisplay *Next;
@@ -141,21 +141,30 @@ struct _egl_display
    mtx_t Mutex;
 
 
-    //added by func: _eglFindDisplay()
+    //added by egldisplay.c ： _eglFindDisplay()
     // might be   _EGL_PLATFORM_X11
    _EGLPlatformType Platform; /**< The type of the platform display */
+
+
     //eglGetDisplay()的第一个参数
+    //added by egldisplay.c ： _eglFindDisplay()
     //一般是 0 或者 Window(Xlib.h) 的指针
    void *PlatformDisplay;     /**< A pointer to the platform display */
 
 
-
+    //初始化在：egldriver.c ； _eglLoadModule
+    //实际在； egl_dri2.c ； _eglBuiltInDriverDRI2
    _EGLDriver *Driver;        /**< Matched driver of the display */
+
+
+    //changed to true by egldriver.c ： _eglMatchDriver
    EGLBoolean Initialized;    /**< True if the display is initialized */
 
    /* options that affect how the driver initializes the display */
    struct {
+       //set to false by egldriver.c : _eglMatchDriver
       EGLBoolean TestOnly;    /**< Driver should not set fields when true */
+       //set to false by egldriver.c : _eglMatchDriver
       EGLBoolean UseFallback; /**< Use fallback driver (sw or less features) */
    } Options;
 

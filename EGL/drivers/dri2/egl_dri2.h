@@ -84,12 +84,23 @@
 
 struct wl_buffer;
 
+//初始化于： egl_dri2.c ； _eglBuiltInDriverDRI2
 struct dri2_egl_driver
 {
-   _EGLDriver base; //struct _egl_driver
+    //传入base小指针，转换成原来的大指针struct dri2_egl_driver)
+   _EGLDriver base; // egldriver.h : struct _egl_driver   // (_EGLDriver)
 
-   void *handle;  //dangerous : out of malloc(sizeof(_EGLDriver))
+    //初始化于 ： egl_dri2.c ： dri2_load(_EGLDriver *drv)
+    //通过dlopen(libname, RTLD_LAZY | RTLD_GLOBAL);
+   void *handle;
+
+   //初始化于 ： egl_dri2.c ： dri2_load(_EGLDriver *drv)
+    //通过dlsym(handle,"_glapi_get_proc_address")加载
    _EGLProc (*get_proc_address)(const char *procname);
+
+
+    //初始化于 ： egl_dri2.c ： dri2_load(_EGLDriver *drv)
+    //通过get_proc_address(const char *procname)来初始化
    void (*glFlush)(void);
 };
 

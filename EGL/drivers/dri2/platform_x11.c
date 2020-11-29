@@ -1312,6 +1312,7 @@ static const __DRIextension *swrast_loader_extensions[] = {
 static EGLBoolean
 dri2_initialize_x11_swrast(_EGLDriver *drv, _EGLDisplay *disp)
 {
+    //载入失败返回false
     _eglLog(_EGL_INFO, "Using swrast");
    struct dri2_egl_display *dri2_dpy;
 
@@ -1642,8 +1643,9 @@ dri2_initialize_x11_dri2(_EGLDriver *drv, _EGLDisplay *disp)
 
 EGLBoolean
 dri2_initialize_x11(_EGLDriver *drv, _EGLDisplay *disp)
-{
+{// drv* is not used
 #ifdef DELETED_FUNC
+    //drv* is not used
    return dri2_initialize_x11_swrast(drv, disp);//return TRUE
 #else
    EGLBoolean initialized = EGL_TRUE;

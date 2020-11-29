@@ -79,8 +79,14 @@ typedef _EGLDriver *(*_EGLMain_t)(const char *args);
 /**
  * Base class for device drivers.
  */
-struct _egl_driver
+//初始化于： egl_dri2.c ； _eglBuiltInDriverDRI2
+//随着父结构体（dri2_driver)一起被初始化
+//传入base小指针，转换成原来的大指针struct dri2_egl_driver)
+struct _egl_driver  //_EGLDriver
 {
+
+    // "DRI2"
+    //初始化于： egl_dri2.c ： _eglBuiltInDriverDRI2
    const char *Name;  /**< name of this driver */
 
    /**
@@ -88,6 +94,9 @@ struct _egl_driver
     *
     * It is called before dlclose().
     */
+
+    //初始化于： egl_dri2.c ： _eglBuiltInDriverDRI2
+    //指向： egl_dri2.c ： dri2_unload
    void (*Unload)(_EGLDriver *drv);
 
    _EGLAPI API;  /**< EGL API dispatch table */

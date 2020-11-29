@@ -76,6 +76,8 @@ _eglLoadModule(_EGLModule *mod)
    if (!mod->BuiltIn)
          return EGL_FALSE;
 
+   //在这里初始化了 *Driver
+    //mod->BuiltIn在_eglAddBuiltInDrivers被初始化
    drv = mod->BuiltIn(NULL);
    if (!drv || !drv->Name)
       return EGL_FALSE;
@@ -195,6 +197,8 @@ _eglAddBuiltInDrivers(void)
    for (i = 0; _eglBuiltInDrivers[i].name; i++) {
       mod = _eglAddModule(_eglBuiltInDrivers[i].name);
       if (mod)//如果mod不是空指针，执行以下代码
+          //注： BuiltIn是有一个参数的函数指针
+          //此处为； _eglBuiltInDriverDRI2
          mod->BuiltIn = _eglBuiltInDrivers[i].main;
    }
 }
@@ -232,16 +236,20 @@ _eglMatchAndInitialize(_EGLDisplay *dpy)
    _EGLDriver *drv = NULL;
    EGLint i = 0;
 
-   if (!_eglAddDrivers()) {///添加失败执行以下代码
+   //添加dri2驱动,给驱动命名"egl_dri2"
+   //执行 _eglBuiltInDriverDRI2
+   if (!_eglAddDrivers()) {
+      //添加失败
       _eglLog(_EGL_WARNING, "failed to find any driver");
       return NULL;
    }
 
-   if (dpy->Driver) {//第一次启动为空指针，不执行以下代码,貌似不执行。。
+   if (dpy->Driver) {//如果已经有驱动了，直接重载并返回
+       //经测试，not used
       drv = dpy->Driver;
       /* no re-matching? */
       if (!drv->API.Initialize(drv, dpy))
-         drv = NULL;
+         drv = NULL;//载入失败
       return drv;
    }
 
@@ -249,6 +257,8 @@ _eglMatchAndInitialize(_EGLDisplay *dpy)
       _EGLModule *mod = (_EGLModule *) _eglModules->Elements[i];
 
       if (!_eglLoadModule(mod)) {
+          //移除无用的驱动
+          //经测试，not used
          /* remove invalid modules */
          _eglEraseArray(_eglModules, i, _eglFreeModule);
          continue;
