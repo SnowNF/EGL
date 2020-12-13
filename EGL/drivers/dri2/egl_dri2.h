@@ -107,6 +107,7 @@ struct dri2_egl_driver
 struct dri2_egl_display_vtbl {
    int (*authenticate)(_EGLDisplay *disp, uint32_t id);
 
+   //platform_x11.c :: dri2_x11_create_window_surface()
    _EGLSurface* (*create_window_surface)(_EGLDriver *drv, _EGLDisplay *dpy,
                                          _EGLConfig *config,
                                          void *native_window,
@@ -170,15 +171,17 @@ struct dri2_egl_display_vtbl {
 
 struct dri2_egl_display
 {
-   const struct dri2_egl_display_vtbl *vtbl;
+
+    //loaded at platform_x11.c : dri2_initialize_x11_swrast()
+    const struct dri2_egl_display_vtbl *vtbl;
 
    int                       dri2_major;
    int                       dri2_minor;
    __DRIscreen              *dri_screen;    //createNewScreen2()函数返回
    int                       own_dri_screen;    // 1 ?
    const __DRIconfig       **driver_configs;
-   void                     *driver;    //返回dlopen的so文件的指针
-   const __DRIcoreExtension       *core;
+   void                     *driver;    //返回dlopen的swrast_dri.so文件的指针
+   const __DRIcoreExtension       *core; //dri2_bind_extensions()来初始化
    const __DRIimageDriverExtension *image_driver;
    const __DRIdri2Extension       *dri2;
    const __DRIswrastExtension     *swrast;  //dri2_bind_extensions()来初始化
@@ -188,15 +191,18 @@ struct dri2_egl_display
    const __DRIrobustnessExtension *robustness;  //NULL
    const __DRI2configQueryExtension *config;
    const __DRI2fenceExtension *fence;   //NULL
-   const __DRI2rendererQueryExtension *rendererQuery;
+   const __DRI2rendererQueryExtension *rendererQuery; //NULL
    const __DRI2interopExtension *interop;
-   int                       fd;
+
+    //loaded at platform_x11.c : dri2_initialize_x11_swrast()
+   int                       fd;  //-1
 
    /* dri2_initialize/dri2_terminate increment/decrement this count, so does
     * dri2_make_current (tracks if there are active contexts/surfaces). */
    int                       ref_count;
 
-   int                       own_device;
+    //loaded at platform_x11.c : dri2_initialize_x11_swrast()
+   int                       own_device;  //true
    int                       invalidate_available;
    int                       min_swap_interval;
    int                       max_swap_interval;
@@ -205,14 +211,23 @@ struct dri2_egl_display
    struct gbm_dri_device    *gbm_dri;
 #endif
 
+   //loaded at platform_x11.c : dri2_initialize_x11_swrast()
    char                     *driver_name;   //swrast
 
+    // /usr/local/include/GL/internal/dri_interface.h :
+    // struct __DRIswrastLoaderExtensionRec :: __DRIextension base;
    const __DRIextension    **loader_extensions;
-   const __DRIextension    **driver_extensions; //__driDriverGetExtensions_swrast函数的*handle
+
+   //loaded at egl_dri2.c : dri2_load_driver_swrast()
+   //获得的__DRIextension**(数组)指针
+   const __DRIextension    **driver_extensions;
 
 #ifdef HAVE_X11_PLATFORM
+   //xcb_connect()返回的指针 at platform_x11.c : dri2_initialize_x11_swrast()
    xcb_connection_t         *conn;
-   int                      screen;
+
+    //loaded at platform_x11.c : dri2_initialize_x11_swrast()
+   int                      screen; //0
    int                      swap_available;
 #ifdef HAVE_DRI3
    struct loader_dri3_extensions loader_dri3_ext;

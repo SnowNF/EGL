@@ -58,6 +58,7 @@ const struct {
    const char *name;
    _EGLMain_t main;
 } _eglBuiltInDrivers[] = {
+               //used by _eglAddBuiltInDrivers()
    { "egl_dri2", _eglBuiltInDriverDRI2 },
    { NULL, NULL }
 };
@@ -197,8 +198,7 @@ _eglAddBuiltInDrivers(void)
    for (i = 0; _eglBuiltInDrivers[i].name; i++) {
       mod = _eglAddModule(_eglBuiltInDrivers[i].name);
       if (mod)//如果mod不是空指针，执行以下代码
-          //注： BuiltIn是有一个参数的函数指针
-          //此处为； _eglBuiltInDriverDRI2
+          //注： BuiltIn是_eglBuiltInDriverDRI2()返回的Driver*
          mod->BuiltIn = _eglBuiltInDrivers[i].main;
    }
 }
@@ -248,11 +248,15 @@ _eglMatchAndInitialize(_EGLDisplay *dpy)
        //经测试，not used
       drv = dpy->Driver;
       /* no re-matching? */
-      if (!drv->API.Initialize(drv, dpy))
+
+      //redirected to platform_x11.c : dri2_initialize_x11_swrast()
+      if (!drv->API.Initialize(drv, dpy))//return TRUE
+          // note: drv is not used
          drv = NULL;//载入失败
       return drv;
    }
 
+   //先执行这里啦
    while (i < _eglModules->Size) {
       _EGLModule *mod = (_EGLModule *) _eglModules->Elements[i];
 
@@ -265,7 +269,8 @@ _eglMatchAndInitialize(_EGLDisplay *dpy)
       }
 
       //载入DRI2驱动...
-      if (mod->Driver->API.Initialize(mod->Driver, dpy)) {
+       //redirected to platform_x11.c : dri2_initialize_x11_swrast()
+      if (mod->Driver->API.Initialize(mod->Driver, dpy)) {//return TRUE
          drv = mod->Driver;
          break;
       }

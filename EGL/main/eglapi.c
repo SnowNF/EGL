@@ -1185,6 +1185,7 @@ EGLSurface EGLAPIENTRY
 eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config,
                         const EGLint *attrib_list)
 {
+   //used
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLConfig *conf = _eglLookupConfig(config, disp);
    _EGLDriver *drv;

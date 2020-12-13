@@ -96,9 +96,10 @@ struct _egl_driver  //_EGLDriver
     */
 
     //初始化于： egl_dri2.c ： _eglBuiltInDriverDRI2
-    //指向： egl_dri2.c ： dri2_unload
+    //指向： egl_dri2.c ： dri2_unload()
    void (*Unload)(_EGLDriver *drv);
 
+   //指向一大堆API(eglapi.h)
    _EGLAPI API;  /**< EGL API dispatch table */
 };
 

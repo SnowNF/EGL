@@ -105,18 +105,24 @@ struct _egl_extensions
    EGLBoolean EXT_swap_buffers_with_damage;
 
    EGLBoolean KHR_cl_event2;    //false
+
+    //egl_dri2.c : dri2_setup_screen()
    EGLBoolean KHR_create_context;   //true
    EGLBoolean KHR_fence_sync;    //false
    EGLBoolean KHR_get_all_proc_addresses;    //false
-   EGLBoolean KHR_gl_colorspace;    //true
+   EGLBoolean KHR_gl_colorspace;    //false
    EGLBoolean KHR_gl_renderbuffer_image;  //false
    EGLBoolean KHR_gl_texture_2D_image;    //false
    EGLBoolean KHR_gl_texture_3D_image;       //false
    EGLBoolean KHR_gl_texture_cubemap_image;    //false
    EGLBoolean KHR_image_base;    //false
    EGLBoolean KHR_image_pixmap;  //false
+
+    //egl_dri2.c : dri2_setup_screen()
    EGLBoolean KHR_no_config_context;   //true
-   EGLBoolean KHR_reusable_sync;    //true
+   EGLBoolean KHR_reusable_sync;    //false
+
+    //egl_dri2.c : dri2_setup_screen()
    EGLBoolean KHR_surfaceless_context;    //true
    EGLBoolean KHR_wait_sync;     //false
 
@@ -171,12 +177,16 @@ struct _egl_display//_EGLDisplay
 
    /* these fields are set by the driver during init */
     // *DriverData: the printer of struct dri2_egl_display
-    // might be loaded at dri2_initialize_x11_swrast()
+    //loaded at platform_x11.c : dri2_initialize_x11_swrast()
+    //type : struct dri2_egl_display , see egl_dri2.h
    void *DriverData;        /**< Driver private data */
 
 
+
    EGLint Version;     //14   /**< EGL version major*10+minor */
-   EGLint ClientAPIs;         /**< Bitmask of APIs supported (EGL_xxx_BIT) */
+
+    //egl_dri2.c : dri2_setup_screen()
+   EGLint ClientAPIs;  //77       /**< Bitmask of APIs supported (EGL_xxx_BIT) */
    _EGLExtensions Extensions; /**< Extensions supported */
 
    /* these fields are derived from above */
